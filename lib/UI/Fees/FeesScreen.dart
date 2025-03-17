@@ -17,9 +17,7 @@ import '../Auth/login_screen.dart';
 
 class FeesScreen extends StatefulWidget {
   const FeesScreen({super.key,});
-
-
-
+  
   @override
   State<FeesScreen> createState() => _PaymentScreenState();
 }

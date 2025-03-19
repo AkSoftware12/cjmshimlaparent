@@ -2,6 +2,8 @@ import '../../../constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../CommonCalling/data_comming_soon.dart';
+
 class ReportCardScreen extends StatelessWidget {
   // Sample data for the report card
   final List<Map<String, dynamic>> subjects = [
@@ -15,93 +17,104 @@ class ReportCardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primary,
+      backgroundColor: AppColors.secondary,
       appBar: AppBar(
-        title: Text(
-          'Report Card',
-          style: GoogleFonts.montserrat(),
-        ),
-        backgroundColor: AppColors.primary,
-      ),
+          iconTheme: IconThemeData(color: AppColors.textwhite),
+          backgroundColor: AppColors.secondary,
+          title: Text(
+            'Report Card',
+            style: GoogleFonts.montserrat(
+              textStyle: Theme.of(context).textTheme.displayLarge,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              fontStyle: FontStyle.normal,
+              color: AppColors.textwhite,
+            ),
+          )),
+
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // Header Section
-            Container(
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Student Name: John Doe",
-                    style: GoogleFonts.montserrat(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Text(
-                    "Class: 10",
-                    style: GoogleFonts.montserrat(
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Text(
-                    "Roll No: 23",
-                    style: GoogleFonts.montserrat(
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            // Report Card List
-            Expanded(
-              child: ListView.builder(
-                itemCount: subjects.length,
-                itemBuilder: (context, index) {
-                  final subject = subjects[index];
-                  return Card(
-                    elevation: 3,
-                    margin: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: ListTile(
-                      title: Text(
-                        subject['subject'],
-                        style: GoogleFonts.montserrat(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      subtitle: Text(
-                        "Marks: ${subject['marks']} / ${subject['total']}",
-                        style: GoogleFonts.montserrat(
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      trailing: Text(
-                        "${((subject['marks'] / subject['total']) * 100).toStringAsFixed(1)}%",
-                        style: GoogleFonts.montserrat(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
+        child: Center(child: DataCommingSoonWidget(title: '',))
+
+
+        // Column(
+        //   children: [
+        //     Center(child: DataCommingSoonWidget(title: '',))
+        //     // Header Section
+        //     // Container(
+        //     //   padding: const EdgeInsets.all(16.0),
+        //     //   decoration: BoxDecoration(
+        //     //     color: AppColors.primary,
+        //     //     borderRadius: BorderRadius.circular(8.0),
+        //     //   ),
+        //     //   child: Column(
+        //     //     crossAxisAlignment: CrossAxisAlignment.start,
+        //     //     children: [
+        //     //       Text(
+        //     //         "Student Name: John Doe",
+        //     //         style: GoogleFonts.montserrat(
+        //     //           fontSize: 18,
+        //     //           fontWeight: FontWeight.bold,
+        //     //           color: Colors.white,
+        //     //         ),
+        //     //       ),
+        //     //       Text(
+        //     //         "Class: 10",
+        //     //         style: GoogleFonts.montserrat(
+        //     //           fontSize: 16,
+        //     //           color: Colors.white,
+        //     //         ),
+        //     //       ),
+        //     //       Text(
+        //     //         "Roll No: 23",
+        //     //         style: GoogleFonts.montserrat(
+        //     //           fontSize: 16,
+        //     //           color: Colors.white,
+        //     //         ),
+        //     //       ),
+        //     //     ],
+        //     //   ),
+        //     // ),
+        //     // const SizedBox(height: 20),
+        //     // // Report Card List
+        //     // Expanded(
+        //     //   child: ListView.builder(
+        //     //     itemCount: subjects.length,
+        //     //     itemBuilder: (context, index) {
+        //     //       final subject = subjects[index];
+        //     //       return Card(
+        //     //         elevation: 3,
+        //     //         margin: const EdgeInsets.symmetric(vertical: 8.0),
+        //     //         child: ListTile(
+        //     //           title: Text(
+        //     //             subject['subject'],
+        //     //             style: GoogleFonts.montserrat(
+        //     //               fontSize: 16,
+        //     //               fontWeight: FontWeight.w500,
+        //     //             ),
+        //     //           ),
+        //     //           subtitle: Text(
+        //     //             "Marks: ${subject['marks']} / ${subject['total']}",
+        //     //             style: GoogleFonts.montserrat(
+        //     //               fontSize: 14,
+        //     //               color: Colors.grey,
+        //     //             ),
+        //     //           ),
+        //     //           trailing: Text(
+        //     //             "${((subject['marks'] / subject['total']) * 100).toStringAsFixed(1)}%",
+        //     //             style: GoogleFonts.montserrat(
+        //     //               fontSize: 14,
+        //     //               fontWeight: FontWeight.bold,
+        //     //               color: Colors.green,
+        //     //             ),
+        //     //           ),
+        //     //         ),
+        //     //       );
+        //     //     },
+        //     //   ),
+        //     // ),
+        //   ],
+        // ),
       ),
     );
   }

@@ -51,10 +51,10 @@ class _HomeScreenState extends State<HomeScreen> {
       'name': 'Home Work',
       'image': 'assets/home_work.png',
     },
-    {
-      'name': 'Subject',
-      'image': 'assets/physics.png',
-    },
+    // {
+    //   'name': 'Subject',
+    //   'image': 'assets/physics.png',
+    // },
     {
       'name': 'News & Events',
       'image': 'assets/event_planner.png',
@@ -103,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
         print(studentData);
       });
     } else {
-      _showLoginDialog();
+      // _showLoginDialog();
     }
   }
 
@@ -130,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
         print(assignments);
       });
     } else {
-      _showLoginDialog();
+      // _showLoginDialog();
     }
   }
 
@@ -209,7 +209,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     custFirstName: studentData?['student_name']?? '',
                     custLastName: 'N/A',
                     mobile: studentData?['contact_no']??'',
-                    email:studentData?['contact_mail']??'',
+                    email:studentData?['email']??'',
                     address: studentData?['address']??'',
                     payDate: '',
                     dueAmount: '1250',
@@ -228,22 +228,33 @@ class _HomeScreenState extends State<HomeScreen> {
                   _buildGridview(),
                   const SizedBox(height: 10),
 
-                  _buildsellAll('Assignment', ''),
-                  _buildListView(),
+                  // _buildsellAll('Assignment', ''),
+                  // _buildListView(),
+
+                  _buildsellAll('Latest Photo', ''),
 
                   Container(
                     height: 220,
                     width: double.infinity,
                     child: Image.network(
-                      'https://cjmambala.in/images/building.png',
+                      'https://webcjm.cjmshimla.in/upload/banners/1740211256_cjmshimlabanner3.png',
                       fit: BoxFit.fill,
                     ),
                   ),
-
                   Divider(
                     thickness: 1.sp,
                     color: Colors.grey,
                   ),
+                  Container(
+                    height: 220,
+                    width: double.infinity,
+                    child: Image.network(
+                      'https://webcjm.cjmshimla.in/upload/banners/1740211232_cjmshimlabanner1.png',
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+
+
                 ],
               ),
             ),
@@ -609,10 +620,9 @@ class CarouselExample extends StatefulWidget {
 
 class _CarouselExampleState extends State<CarouselExample> {
   final List<String> imgList = [
-    'https://api-ap-south-mum-1.openstack.acecloudhosting.com:8080/franciscan/SchImg/CJMAMB/PhotoAlbum/Full/Photo_542310.jpg',
-    'https://api-ap-south-mum-1.openstack.acecloudhosting.com:8080/franciscan/SchImg/CJMAMB/PhotoAlbum/Full/Photo_532542.jpg',
-    'https://api-ap-south-mum-1.openstack.acecloudhosting.com:8080/franciscan/SchImg/CJMAMB/PhotoAlbum/Full/Photo_522725.jpg',
-    'https://cjmambala.in/images/building.png',
+    'https://webcjm.cjmshimla.in/upload/banners/1740211232_cjmshimlabanner1.png',
+    'https://webcjm.cjmshimla.in/upload/banners/1740211243_cjmshimlabanner2.png',
+    'https://webcjm.cjmshimla.in/upload/banners/1740211256_cjmshimlabanner3.png',
   ];
 
   // final List<String> imgList = [

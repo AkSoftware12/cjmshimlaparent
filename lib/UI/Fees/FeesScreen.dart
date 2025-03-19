@@ -14,10 +14,11 @@ import '../../CommonCalling/progressbarWhite.dart';
 import '../../PaymentGateway/PayButton/pay_button.dart';
 import '../../constants.dart';
 import '../Auth/login_screen.dart';
+import '../WebView/webview.dart';
 
 class FeesScreen extends StatefulWidget {
   const FeesScreen({super.key,});
-  
+
   @override
   State<FeesScreen> createState() => _PaymentScreenState();
 }
@@ -143,9 +144,10 @@ class _PaymentScreenState extends State<FeesScreen> {
             },
             custFirstName: studentData?['student_name']?? '',
             custLastName: 'N/A',
-            mobile: studentData?['contact_no']??'', email:studentData?['contact_mail']??'',
+            mobile: studentData?['contact_no'].toString()??'', email:studentData?['email']??'',
             address: studentData?['address']??'',
             payDate: fess[index]['pay_date'].toString(),
+            id: fess[index]['id'],
           );
         },
       ),
@@ -165,12 +167,17 @@ class PaymentCard extends StatelessWidget {
   final String mobile; //optional
   final String email; //optional
   final String address;
+  final int id;
 
   PaymentCard({
     required this.amount,
     required this.status,
     required this.dueDate,
-    required this.onPayNow, required this.custFirstName, required this.custLastName, required this.mobile, required this.email, required this.address, required this.payDate,
+    required this.onPayNow,
+    required this.custFirstName,
+    required this.custLastName,
+    required this.mobile,
+    required this.email, required this.address, required this.payDate, required this.id,
   });
 
   @override
@@ -223,49 +230,66 @@ class PaymentCard extends StatelessWidget {
 
             if(status=='active')
             // Due Date
-            _buildRow("Due Date", dueDate, Icons.calendar_today, Colors.blueGrey),
+              _buildRow("Due Date", dueDate, Icons.calendar_today, Colors.blueGrey),
             if(status=='paid')
               _buildRow("Pay Date", payDate, Icons.calendar_today, Colors.blueGrey),
 
 
             SizedBox(height: 20),
             if(status=='active')
-            CommonNdpsButton(buttonText: "Pay Now",
-              status: status, amount: amount,
-              custFirstName: custFirstName,
-              custLastName: custLastName,
-              mobile: mobile, email: email,
-              address: address,
-            ),
+              CommonNdpsButton(buttonText: "Pay Now",
+                status: status, amount: amount,
+                custFirstName: custFirstName,
+                custLastName: custLastName,
+                mobile: mobile, email: email,
+                address: address,
+              ),
 
             if(status=='paid')
 
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    // final Uri pdfUri = Uri.parse('https://softcjm.cjmshimla.in/student/fee-receipt/$id');
+                    // if (await canLaunchUrl(pdfUri)) {
+                    //   await launchUrl(pdfUri,
+                    //       mode: LaunchMode
+                    //           .externalApplication);
+                    // } else {
+                    //   print("Could not launch $pdfUri");
+                    // }
 
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return WebViewExample(
+                            title: '',
+                            url: 'https://softcjm.cjmshimla.in/student/fee-receipt/$id',
+                          );
+                        },
+                      ),
+                    );
 
-
-
-    },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
-                ),
-                child: Text(
-                  "Download Receipt ",
-                  style: GoogleFonts.montserrat(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                  child: Text(
+                    "Download Receipt ",
+                    style: GoogleFonts.montserrat(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
-            ),
           ],
         ),
       ),

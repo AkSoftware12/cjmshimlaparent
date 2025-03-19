@@ -172,9 +172,22 @@ class _WebViewContainerState extends State<WebViewContainer> {
     Navigator.pop(context); // Close current window
     // ignore: use_build_context_synchronously
 
-    _showPaymentSuccessDialog(context,data);
+    if(transactionResult=='Transaction Cancelled!'){
+      _showPaymentCanceledDialog(context,data);
+
+    } else if(transactionResult=='Transaction Success'){
+      _showPaymentSuccessDialog(context,data);
+
+    }
+
+    else{
+      _showPaymentCanceledDialog(context,data);
+
+
+    }
     ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Transaction Status = $transactionResult")));
+    print(transactionResult);
   }
 
   Future<bool> _handleBackButtonAction(BuildContext context) async {
@@ -232,6 +245,52 @@ class _WebViewContainerState extends State<WebViewContainer> {
                 SizedBox(height: 10),
                 Text(
                   'Your payment has been processed successfully!',
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  '${data.toString()}',
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  void _showPaymentCanceledDialog(BuildContext context, String data) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          title: const Text(
+            'Transaction Cancelled!',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.cancel,
+                  color: Colors.red,
+                  size: 60,
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Your transaction has been canceled.',
                   textAlign: TextAlign.center,
                 ),
                 Text(

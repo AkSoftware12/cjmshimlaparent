@@ -126,7 +126,7 @@ class CommonNdpsButton extends StatelessWidget {
         ),
       ),
       child:  Text(
-        buttonText,
+        '${buttonText} ${'₹'} ${amount}',
         style: GoogleFonts.montserrat(
           fontSize: 16,
           fontWeight: FontWeight.w600,

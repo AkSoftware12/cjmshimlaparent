@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../CommonCalling/data_comming_soon.dart';
 import '../../CommonCalling/data_not_found.dart';
 import '../../CommonCalling/progressbarWhite.dart';
 import '../../HexColorCode/HexColor.dart';
@@ -54,12 +55,11 @@ class _AssignmentListScreenState extends State<HomeWorkScreen> {
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
       setState(() {
-        assignments = jsonResponse['data']; // Update state with fetched data
+        // assignments = jsonResponse['data']; // Update state with fetched data
         isLoading = false; // Stop progress bar
 
       });
     } else {
-      _showLoginDialog();
       setState(() {
         isLoading = false;
       });
@@ -113,7 +113,7 @@ class _AssignmentListScreenState extends State<HomeWorkScreen> {
       body:  isLoading
           ? WhiteCircularProgressWidget()
           : assignments.isEmpty
-          ? Center(child: DataNotFoundWidget(title: 'Home Work  Not Available.',))
+          ? Center(child: DataCommingSoonWidget(title: '',))
           :  ListView.builder(
           itemCount: assignments.length,
           itemBuilder: (context, index) {

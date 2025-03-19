@@ -14,6 +14,7 @@ import 'dart:convert';
 import 'Auth/login_screen.dart';
 import 'FAQ/faq.dart';
 import 'Fees/FeesScreen.dart';
+import 'Fees/fee_demo.dart';
 import 'Gallery/gallery_tab.dart';
 import 'Help/help.dart';
 import 'Library/LibraryScreen.dart';
@@ -43,7 +44,8 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
     AttendanceScreen(),
     // AttendanceCalendar(),
     LibraryScreen(),
-    FeesScreen(),
+    // FeesScreen(),
+    FeesDemoScreen(),
     ProfileScreen(),
   ];
 
@@ -711,40 +713,40 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
 
                             },
                           ),
-                          Padding(
-                            padding:
-                            EdgeInsets.only(left: 8, right: 8),
-                            child: Divider(
-                              height: 1,
-                              color: Colors.grey.shade300,
-                              thickness: 1,
-                            ),
-                          ),
-                          ListTile(
-                            title: Text(
-                              'FAQs',
-                              style: GoogleFonts.cabin(
-                                textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                            ),
-                            trailing: Container(
-                                height: 20,
-                                width: 20,
-                                child: Image.asset('assets/faq.png')),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return FaqScreen(appBar: 'FAQ',);
-                                  },
-                                ),
-                              );
-                            },
-                          ),
+                          // Padding(
+                          //   padding:
+                          //   EdgeInsets.only(left: 8, right: 8),
+                          //   child: Divider(
+                          //     height: 1,
+                          //     color: Colors.grey.shade300,
+                          //     thickness: 1,
+                          //   ),
+                          // ),
+                          // ListTile(
+                          //   title: Text(
+                          //     'FAQs',
+                          //     style: GoogleFonts.cabin(
+                          //       textStyle: TextStyle(
+                          //           color: Colors.white,
+                          //           fontSize: 15,
+                          //           fontWeight: FontWeight.normal),
+                          //     ),
+                          //   ),
+                          //   trailing: Container(
+                          //       height: 20,
+                          //       width: 20,
+                          //       child: Image.asset('assets/faq.png')),
+                          //   onTap: () {
+                          //     Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(
+                          //         builder: (context) {
+                          //           return FaqScreen(appBar: 'FAQ',);
+                          //         },
+                          //       ),
+                          //     );
+                          //   },
+                          // ),
                           Padding(
                             padding:
                             EdgeInsets.only(left: 8, right: 8),
@@ -778,8 +780,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                                   builder: (context) {
                                     return WebViewExample(
                                       title: 'Privacy',
-                                      url:
-                                      'https://www.freeprivacypolicy.com/live/79492741-6341-4ea2-a3b1-87ffc1154bda',
+                                      url: 'https://www.freeprivacypolicy.com/live/560e1305-dda8-45ce-8ea5-8c61009fad28',
                                     );
                                   },
                                 ),
@@ -820,7 +821,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                                     return WebViewExample(
                                       title: 'Terms & Condition',
                                       url:
-                                      'https://www.freeprivacypolicy.com/live/79492741-6341-4ea2-a3b1-87ffc1154bda',
+                                      'https://www.freeprivacypolicy.com/live/560e1305-dda8-45ce-8ea5-8c61009fad28',
                                     );
                                   },
                                 ),

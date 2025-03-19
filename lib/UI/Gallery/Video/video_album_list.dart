@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:cjmshimlaparent/UI/Gallery/Video/video_list.dart';
+import 'package:cjmshimlaparent/UI/Gallery/Video/video_player.dart';
 
 import '../../../constants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -85,14 +86,24 @@ class _GalleryScreenState extends State<VideoAlbumListScreen> {
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: (){
+
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) {
-                  return VideoListScreen( data: images[index],);
-                },
+                builder: (context) => VideoPlayer(
+                  url: images[index]['video_url'], title: '', videoId: null, videoStatus: '',
+                ),
               ),
             );
+
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) {
+            //       return VideoListScreen( data: images[index],);
+            //     },
+            //   ),
+            // );
           },
           child: Card(
             color: Colors.white,
@@ -112,7 +123,10 @@ class _GalleryScreenState extends State<VideoAlbumListScreen> {
                         fit: BoxFit.cover,
                         height: 100.sp,
                         placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        errorWidget: (context, url, error) => SizedBox(
+                            width: double.infinity,
+                            child: Image.network('https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930',width: double.infinity,)
+                        ),
                       ),
                     ),
                   ),

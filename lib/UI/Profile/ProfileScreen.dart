@@ -59,7 +59,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
         _controller.forward(); // Start animation once data is loaded
       });
     } else {
-      _showLoginDialog();
+      // _showLoginDialog();
     }
   }
 
@@ -172,7 +172,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                               const SizedBox(height: 10),
 
                               Text(
-                                studentData!['student_name'],
+                                studentData!['student_name']?? '',
                                 style: GoogleFonts.montserrat(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -181,7 +181,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                               ),
                               const SizedBox(height: 5),
                               Text(
-                                studentData!['email'],
+                                studentData!['email']??'',
                                 style: GoogleFonts.montserrat(
                                   fontSize: 14,
                                   color: Colors.white70,
@@ -189,7 +189,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                               ),
                               const SizedBox(height: 5),
                               Text(
-                                studentData!['contact_no'],
+                                studentData!['contact_no'] ?? 'N/A'.toString(),
                                 style: GoogleFonts.montserrat(
                                   fontSize: 14,
                                   color: Colors.white70,
@@ -234,7 +234,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
               ]),
               const SizedBox(height: 20),
               _buildAnimatedSection('Academic Information', [
-                buildProfileRow('Class', studentData!['class_name']),
+                buildProfileRow('Class', studentData!['class_name']??''),
                 buildProfileRow('Section', studentData!['section']?? ''),
                 buildProfileRow('Roll Number', studentData!['roll_no']??''),
                 buildProfileRow(

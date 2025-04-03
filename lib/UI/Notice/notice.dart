@@ -45,10 +45,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final token = prefs.getString('token');
     print("Token: $token");
 
-    if (token == null) {
-      _showLoginDialog();
-      return;
-    }
+
 
     final response = await http.get(
       Uri.parse(ApiRoutes.events),
@@ -102,7 +99,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
       isLoading = false; // Stop progress bar
 
     } else {
-      _showLoginDialog();
       setState(() {
         isLoading = true; // Show progress bar
       });
@@ -143,7 +139,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         return AlertDialog(
           title: Text(
             "Event Details",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w700),
           ),
           content: Container(
             width: double.maxFinite,
@@ -165,15 +161,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         event['name'],
                         style: TextStyle(
                           color: Colors.red[800],
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                       subtitle: Padding(
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           "📅 ${event['start_date']} - ${event['end_date']}\n📌 Type: ${event['type']}",
-                          style: TextStyle(color: Colors.red[700], fontSize: 14),
+                          style: TextStyle(color: Colors.red[700], fontSize: 11.sp),
                         ),
                       ),
                     ),
@@ -206,27 +202,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
       },
     );
   }
-  void _showLoginDialog() {
-    showCupertinoDialog(
-      context: context,
-      builder: (ctx) => CupertinoAlertDialog(
-        title: const Text('Session Expired'),
-        content: const Text('Please log in again to continue.'),
-        actions: [
-          CupertinoDialogAction(
-            child: const Text('OK'),
-            onPressed: () {
-              Navigator.of(ctx).pop();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginPage()),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -239,7 +214,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           'Event Calendar',
           style: GoogleFonts.montserrat(
             fontSize: 15.sp,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w700,
             color: Colors.white, // Set text color to white
 
           ),
@@ -261,6 +236,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 lastDay: DateTime(2025, 12, 31),
                 calendarFormat: _calendarFormat,
                 eventLoader: _getEventsForDay,
+                availableCalendarFormats: const { // Sirf Month format allow karein
+                  CalendarFormat.month: 'Month',
+                },
                 selectedDayPredicate: (day) {
                   return isSameDay(_selectedDay, day);
                 },
@@ -281,6 +259,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   });
                   _updateMonthlyEvents(focusedDay);
                 },
+                daysOfWeekVisible: true, // Weeks text hide karne ke liye
+
                 calendarBuilders: CalendarBuilders(
                   defaultBuilder: (context, date, _) {
                     bool isHighlighted = _highlightedDays.contains(DateTime(date.year, date.month, date.day));
@@ -393,18 +373,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         event['name'].toString().toUpperCase(),
                         style: TextStyle(
                           color: Colors.red[800],
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                       subtitle: Padding(
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           "📅 ${event['start_date']} - ${event['end_date']}\n📌 Type: ${event['type']}",
-                          style: TextStyle(color: Colors.red[700], fontSize: 14),
+                          style: TextStyle(color: Colors.red[700], fontSize: 11.sp),
                         ),
                       ),
-                      trailing: Icon(Icons.arrow_forward_ios, size: 18, color: Colors.red[700]),
+                      trailing: Icon(Icons.arrow_forward_ios, size: 18.sp, color: Colors.red[700]),
                       onTap: () => _showEventDetails(context,[event]),
                     ),
                   );

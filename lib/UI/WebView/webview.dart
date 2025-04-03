@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cjmshimlaparent/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:dio/dio.dart';
@@ -25,7 +26,7 @@ class _WebViewExampleState extends State<WebViewExample> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: AppColors.secondary,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(widget.title, style: const TextStyle(color: Colors.white)),
       ),
@@ -70,12 +71,12 @@ class _WebViewExampleState extends State<WebViewExample> {
             ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _downloadFile(widget.url);
-        },
-        child: const Icon(Icons.download),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     _downloadFile(widget.url);
+      //   },
+      //   child: const Icon(Icons.download),
+      // ),
     );
   }
 

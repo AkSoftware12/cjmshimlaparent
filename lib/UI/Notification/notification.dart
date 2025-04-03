@@ -34,11 +34,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
     print("Token: $token");
-
-    if (token == null) {
-      _showLoginDialog();
-      return;
-    }
+    //
+    // if (token == null) {
+    //   _showLoginDialog();
+    //   return;
+    // }
 
     final response = await http.get(
       Uri.parse(ApiRoutes.notifications),
@@ -52,34 +52,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
         isLoading = false;
       });
     } else {
-      _showLoginDialog();
       setState(() {
         isLoading = false;
       });
     }
   }
 
-  void _showLoginDialog() {
-    showCupertinoDialog(
-      context: context,
-      builder: (ctx) => CupertinoAlertDialog(
-        title: const Text('Session Expired'),
-        content: const Text('Please log in again to continue.'),
-        actions: [
-          CupertinoDialogAction(
-            child: const Text('OK'),
-            onPressed: () {
-              Navigator.of(ctx).pop();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginPage()),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -93,8 +72,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
           'Notifications',
           style: GoogleFonts.poppins(
             color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+            fontSize: 15.sp,
+            fontWeight: FontWeight.w700,
           ),
         ),
         centerTitle: false,

@@ -124,16 +124,16 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
 
     return Scaffold(
      // backgroundColor: HexColor('#c0d4f2'),
-      backgroundColor: AppColors.primary,
+      backgroundColor: AppColors.secondary,
       appBar: AppBar(
           iconTheme: IconThemeData(color: AppColors.textwhite),
-          backgroundColor: AppColors.primary,
+          backgroundColor: AppColors.secondary,
           // backgroundColor: HexColor('#c0d4f2'),
           title: Text(
             'Time Table',
             style: GoogleFonts.montserrat(
               textStyle: Theme.of(context).textTheme.displayLarge,
-              fontSize: 20,
+              fontSize: 15.sp,
               fontWeight: FontWeight.w600,
               fontStyle: FontStyle.normal,
               color: AppColors.textwhite,
@@ -174,7 +174,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                               padding: EdgeInsets.symmetric(horizontal: 15.sp, vertical: 15.sp),
                               margin: const EdgeInsets.symmetric(horizontal: 5),
                               decoration: BoxDecoration(
-                                color: isSelected ? HexColor('#93a0e8') : Colors.grey[300],
+                                color: isSelected ? AppColors.secondary : Colors.blueAccent.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Center(
@@ -212,160 +212,149 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                             : Stack(
                           children: [
                             Positioned(
-                              left: 80,
-                              top: 10,
+                              left: 60.sp,
+                              top: 10.sp,
                               bottom: 0,
                               child: Container(
-                                width: 1,
-                                color: Colors.blue[300],
+                                width: 3.sp,
+                                decoration: BoxDecoration(
+                                    color: Colors.grey,
+
+                                    borderRadius: BorderRadius.circular(10)
+                                ),
                               ),
                             ),
                             Positioned.fill(
-                              child: ListView.builder(
-                                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                                itemCount: timeTable.length,
-                                itemBuilder: (context, index) {
-                                  final schedule = timeTable[index];
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 10),
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
+                              child: Padding(
+                                padding:  EdgeInsets.only(bottom: 85.sp),
+                                child: ListView.builder(
+                                  padding: EdgeInsets.symmetric(horizontal: 15.sp, vertical: 0),
+                                  itemCount: timeTable.length,
+                                  // shrinkWrap: true,
+                                  // physics: NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    final schedule = timeTable[index];
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 10,),
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
 
-                                        // Time Indicator
-                                        Column(
-                                          children: [
-                                            Text(
-                                              schedule['period'].toString(),
-                                              style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
-                                            ),
-                                            Container(
-                                              height: 3.sp,
-                                              width: 45.sp,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.grey,
+                                          // Time Indicator
+                                          Column(
+                                            children: [
+                                              Text(
+                                                schedule['period'].toString(),
+                                                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                                              ),
+                                              Container(
+                                                height: 3.sp,
+                                                width: 45.sp,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.grey,
 
-                                                  borderRadius: BorderRadius.circular(10)
+                                                    borderRadius: BorderRadius.circular(10)
+                                                ),
                                               ),
-                                            ),
-                                            // SizedBox(height: 80.sp),
-                                            // Text(
-                                            //   schedule['end_time'].toString(),
-                                            //   style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.bold),
-                                            // ),
-                                          ],
-                                        ),
-                                        SizedBox(width: 15),
-                                        // Subject Card
-                                        Expanded(
-                                          child: GestureDetector(
-                                            onTap: (){
-                                              // Navigator.push(
-                                              //   context,
-                                              //   MaterialPageRoute(
-                                              //     builder: (context) {
-                                              //       return TimetableApp();
-                                              //     },
-                                              //   ),
-                                              // );
-                                            },
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                // color: Colors.orange.shade50,
-                                                color: Colors.grey.shade200,
-                                                borderRadius: BorderRadius.circular(10),
-                                              ),
-                                              margin: const EdgeInsets.symmetric(vertical: 0.0),
-                                              child: Padding(
-                                                padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
-                                                child: ListTile(
-                                                  contentPadding: EdgeInsets.zero,
-                                                  leading: Container(
-                                                    padding: EdgeInsets.all(10),
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.blueAccent.withOpacity(0.1),
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                    child: Icon(
-                                                      Icons.book,
-                                                      size: 30,
-                                                      color: Colors.blueAccent,
-                                                    ),
-                                                  ),
-                                                  title: Text(
-                                                    schedule['subject_name'],
-                                                    style: GoogleFonts.montserrat(
-                                                      fontSize: 16,
-                                                      fontWeight: FontWeight.w800,
-                                                      color: Colors.black87,
-                                                    ),
-                                                  ),
-                                                  subtitle: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      SizedBox(height: 6),
-                                                      // Row(
-                                                      //   children: [
-                                                      //     Icon(Icons.watch_later_outlined, size: 18, color: Colors.grey.shade700),
-                                                      //     SizedBox(width: 6),
-                                                      //     Text(
-                                                      //       "${schedule['start_time']} - ${schedule['end_time']}",
-                                                      //       style: GoogleFonts.montserrat(
-                                                      //         fontSize: 14,
-                                                      //         fontWeight: FontWeight.w600,
-                                                      //         color: Colors.grey.shade800,
-                                                      //       ),
-                                                      //     ),
-                                                      //   ],
-                                                      // ),
-                                                      SizedBox(height: 5),
-                                                      Row(
-                                                        children: [
-                                                          SizedBox(
-                                                            height: 18,
-                                                            width: 18,
-                                                            child: Image.asset('assets/teacher.png', color: Colors.black),
-                                                          ),
-                                                          SizedBox(width: 6),
-                                                          Expanded(
-                                                            child: Text(
-                                                              schedule['teacher_name'],
-                                                              style: GoogleFonts.montserrat(
-                                                                fontSize: 14,
-                                                                fontWeight: FontWeight.w600,
-                                                                color: Colors.grey.shade800,
-                                                              ),
-                                                              overflow: TextOverflow.ellipsis,
-                                                            ),
-                                                          ),
-                                                        ],
+                                              // SizedBox(height: 80.sp),
+                                              // Text(
+                                              //   schedule['end_time'].toString(),
+                                              //   style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.bold),
+                                              // ),
+                                            ],
+                                          ),
+                                          SizedBox(width: 10.sp),
+                                          // Subject Card
+                                          Expanded(
+                                            child: GestureDetector(
+                                              onTap: (){
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  // color: Colors.orange.shade50,
+                                                  color: Colors.blueAccent.withOpacity(0.1),
+                                                  borderRadius: BorderRadius.circular(10),
+                                                ),
+                                                margin: const EdgeInsets.symmetric(vertical: 0.0),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+                                                  child: ListTile(
+                                                    contentPadding: EdgeInsets.zero,
+                                                    leading: Container(
+                                                      padding: EdgeInsets.all(10),
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.blueAccent.withOpacity(0.1),
+                                                        shape: BoxShape.circle,
                                                       ),
-                                                      SizedBox(height: 5),
-                                                      // Row(
-                                                      //   children: [
-                                                      //     Icon(Icons.meeting_room, size: 18, color: Colors.grey.shade700),
-                                                      //     SizedBox(width: 6),
-                                                      //     // Text(
-                                                      //     //   "Room No. ${schedule['room_name']}",
-                                                      //     //   style: GoogleFonts.montserrat(
-                                                      //     //     fontSize: 14,
-                                                      //     //     fontWeight: FontWeight.w600,
-                                                      //     //     color: Colors.grey.shade800,
-                                                      //     //   ),
-                                                      //     // ),
-                                                      //   ],
-                                                      // ),
-                                                    ],
+                                                      child: Image.asset(
+                                                        'assets/physics.png',
+                                                        height: 18.sp,
+                                                        width: 18.sp,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                    title: Text(
+                                                      schedule['subject_name'],
+                                                      style: GoogleFonts.montserrat(
+                                                        fontSize: 13.sp,
+                                                        fontWeight: FontWeight.w800,
+                                                        color: Colors.black87,
+                                                      ),
+                                                    ),
+                                                    subtitle: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        // SizedBox(height: 6.sp),
+                                                        // Row(
+                                                        //   children: [
+                                                        //     Icon(Icons.watch_later_outlined, size: 18, color: Colors.grey.shade700),
+                                                        //     SizedBox(width: 6),
+                                                        //     Text(
+                                                        //       "${schedule['start_time']} - ${schedule['end_time']}",
+                                                        //       style: GoogleFonts.montserrat(
+                                                        //         fontSize: 14,
+                                                        //         fontWeight: FontWeight.w600,
+                                                        //         color: Colors.grey.shade800,
+                                                        //       ),
+                                                        //     ),
+                                                        //   ],
+                                                        // ),
+                                                        SizedBox(height: 5.sp),
+                                                        Row(
+                                                          children: [
+                                                            SizedBox(
+                                                              height: 15.sp,
+                                                              width: 15.sp,
+                                                              child: Image.asset('assets/teacher.png', color: Colors.black),
+                                                            ),
+                                                            SizedBox(width: 6.sp),
+                                                            Expanded(
+                                                              child: Text(
+                                                                schedule['teacher_name'],
+                                                                style: GoogleFonts.montserrat(
+                                                                  fontSize: 11.sp,
+                                                                  fontWeight: FontWeight.w600,
+                                                                  color: Colors.grey.shade800,
+                                                                ),
+                                                                overflow: TextOverflow.ellipsis,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        SizedBox(height: 2.sp),
+
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
                             ),
 
@@ -394,19 +383,22 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
   }
   Widget _buildRow(String title, String value, IconData icon, Color color) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: GoogleFonts.cabin(
-              fontSize: 15.sp,
-              fontWeight: FontWeight.w900,
-              color: HexColor('#515992'),
+      padding:  EdgeInsets.only(left: 10.sp),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: GoogleFonts.cabin(
+                fontSize: 15.sp,
+                fontWeight: FontWeight.w900,
+                color: HexColor('#515992'),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

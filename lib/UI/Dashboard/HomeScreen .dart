@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:flutter/cupertino.dart';
@@ -38,6 +40,8 @@ class _HomeScreenState extends State<HomeScreen> {
   List assignments = []; // Declare a list to hold API data
   bool isLoading = true;
    late final String pass;
+  bool _isVisible = true;
+
   late CleanCalendarController calendarController;
   final List<Map<String, String>> items = [
     {
@@ -79,6 +83,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     fetchStudentData();
     fetchDasboardData();
+
+    Timer(Duration(seconds: 10), () {
+      if (mounted) {
+        setState(() {
+          _isVisible = false;
+        });
+      }
+    });
   }
 
   Future<void> fetchStudentData() async {
@@ -177,41 +189,28 @@ class _HomeScreenState extends State<HomeScreen> {
                   CarouselExample(),
                   SizedBox(height: 10.sp),
 
-                  CarouselFees(
+                  _isVisible
+                      ? CarouselFees(
                     status: 'due',
                     dueDate: '',
                     onPayNow: () {
-                      // print("Processing payment for ₹${fess[index]['to_pay_amount']}");
-
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => HomeGateway()),
-                      // );
+                      // Handle payment logic
                     },
-                    custFirstName: studentData?['student_name']?? '',
+                    custFirstName: studentData?['student_name'] ?? '',
                     custLastName: 'N/A',
-                    mobile: studentData?['contact_no']??'',
-                    email:studentData?['email']??'',
-                    address: studentData?['address']??'',
+                    mobile: studentData?['contact_no'] ?? '',
+                    email: studentData?['email'] ?? '',
+                    address: studentData?['address'] ?? '',
                     payDate: '',
                     dueAmount: '0',
-
-                  ),
-
-                  // _buildsellAll('Promotions', 'See All'),
-
-                  // PromotionCard(),
-                  // _buildWelcomeHeader(),
-                  const SizedBox(height: 20),
-                  // _buildsellAll('Promotions', 'See All'),
+                  )
+                      : SizedBox(),
+                   SizedBox(height: 15.sp),
 
                   _buildsellAll('Category', ''),
 
                   _buildGridview(),
-                  const SizedBox(height: 10),
-
-                  // _buildsellAll('Assignment', ''),
-                  // _buildListView(),
+                   SizedBox(height: 10.sp),
 
                   _buildsellAll('Latest Photo', ''),
 

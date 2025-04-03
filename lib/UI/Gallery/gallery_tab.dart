@@ -1,3 +1,5 @@
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../../../constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,15 +33,15 @@ class _GalleryVideoTabScreenState extends State<GalleryVideoTabScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primary,
+      backgroundColor: AppColors.secondary,
       appBar: AppBar(
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.secondary,
         iconTheme: IconThemeData(color: Colors.white),
-        title: Text("Gallery & Video Gallery",
+        title: Text("Gallery",
           style: GoogleFonts.montserrat(
             textStyle: Theme.of(context).textTheme.displayLarge,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
+            fontSize: 15.sp,
+            fontWeight: FontWeight.w700,
             fontStyle: FontStyle.normal,
             color: AppColors.textwhite,
           ),
@@ -51,7 +53,7 @@ class _GalleryVideoTabScreenState extends State<GalleryVideoTabScreen>
             controller: _tabController,
             indicatorColor: Colors.white, // Customize the indicator color
             labelColor: Colors.white, // Customize the selected tab label color
-            unselectedLabelColor: Colors.grey.shade800, // Customize the unselected tab label color
+            unselectedLabelColor: Colors.black, // Customize the unselected tab label color
             indicatorWeight: 3.0, // Thickness of the indicator
             tabs: const [
               Tab(

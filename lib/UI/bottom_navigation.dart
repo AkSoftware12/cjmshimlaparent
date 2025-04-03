@@ -181,7 +181,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
               child: Row(
                 children: [
                   Text(
-                    '${studentData?['student_name'].toString()}',
+                    studentData?['student_name'].toString()??'Student Name',
                     style: GoogleFonts.montserrat(
                       textStyle: Theme.of(context).textTheme.displayLarge,
                       fontSize: 11.sp,
@@ -270,6 +270,8 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
         onTap: _onItemTapped,
         backgroundColor: AppColors.secondary,
         selectedItemColor: AppColors.textwhite,
+        selectedLabelStyle: TextStyle(fontSize: 12.sp), // Change font size for selected item
+        unselectedLabelStyle: TextStyle(fontSize: 11.sp), // Change font s
         unselectedItemColor: AppColors.grey,
           showSelectedLabels: true,  // ✅ Ensures selected labels are always visible
           showUnselectedLabels: true, // ✅ Ensures unselected labels are also visible
@@ -314,7 +316,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               SizedBox(
-                height: 70,
+                height: 50.sp,
               ),
 
               GestureDetector(
@@ -325,7 +327,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                   });
                 },
                 child: CircleAvatar(
-                  radius: 40,
+                  radius: 30.sp,
                   backgroundImage: studentData != null && studentData?['photo'] != null
                       ? NetworkImage(studentData?['photo'])
                       : null,
@@ -336,11 +338,11 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
 
                 ),
               ),
-              const SizedBox(height: 16),
+               SizedBox(height: 10.sp),
               Center(
                 child: Container(
                   child: Padding(
-                    padding: EdgeInsets.only(top: 0, bottom: 20),
+                    padding: EdgeInsets.only(top: 0, bottom: 15.sp),
                     child: Container(
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
@@ -349,7 +351,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                         studentData?['student_name'] ?? 'Student', // Fallback to 'Student' if null
                         style: GoogleFonts.montserrat(
                           textStyle: Theme.of(context).textTheme.displayLarge,
-                          fontSize: 16,
+                          fontSize: 12.sp,
                           fontWeight: FontWeight.w600,
                           fontStyle: FontStyle.normal,
                           color: AppColors.textwhite,
@@ -362,9 +364,9 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
               Divider(
                 color: Colors.grey.shade300,
                 // Set the color of the divider
-                thickness: 2.0,
+                thickness: 2.sp,
                 // Set the thickness of the divider
-                height: 1, // Set the height of the divider
+                height: 1.sp, // Set the height of the divider
               ),
 
               Expanded(
@@ -372,7 +374,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                   padding: EdgeInsets.zero,
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.all(8),
+                      padding: EdgeInsets.all(0.sp),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -384,18 +386,11 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.normal),
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ),
-                            trailing: Container(
-                              height: 20,
-                              width: 20,
-                              color: AppColors.primary,
-                              child:Icon(Icons.dashboard,color: Colors.white,),
-
-
-              ),
+                            trailing: Icon(Icons.dashboard,color: Colors.white,size: 20.sp,),
                             onTap: () {
                               Navigator.pop(context);
 
@@ -411,11 +406,11 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                           ),
                           Padding(
                             padding:
-                            EdgeInsets.only(left: 8, right: 8),
+                            EdgeInsets.only(left: 10.sp, right: 10.sp),
                             child: Divider(
-                              height: 1,
-                              color: Colors.grey.shade300,
-                              thickness: 1,
+                              height: 1.sp,
+                              color: Colors.grey.shade200,
+                              thickness: 1.sp,
                             ),
                           ),
 
@@ -425,17 +420,11 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.normal),
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ),
-                            trailing: Container(
-                              height: 20,
-                              width: 20,
-                              color: AppColors.primary,
-                              child: Icon(CupertinoIcons.clock,color: Colors.white,),
-
-                          ),
+                            trailing:  Icon(CupertinoIcons.clock,color: Colors.white,size: 20.sp,),
                             onTap: () {
                               Navigator.pop(context);
 
@@ -455,13 +444,14 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                           ),
                           Padding(
                             padding:
-                            EdgeInsets.only(left: 8, right: 8),
+                            EdgeInsets.only(left: 10.sp, right: 10.sp),
                             child: Divider(
-                              height: 1,
-                              color: Colors.grey.shade300,
-                              thickness: 1,
+                              height: 1.sp,
+                              color: Colors.grey.shade200,
+                              thickness: 1.sp,
                             ),
                           ),
+
 
 
                           ListTile(
@@ -470,20 +460,14 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.normal),
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ),
-                            trailing: Container(
-                              height: 20,
-                              width: 20,
-                              color: AppColors.primary,
-                              child:  Image.asset(
-                                'assets/assignments.png',
-                                height: 80, // Adjust the size as needed
-                                width: 80,
-                              ),
-
+                            trailing:Image.asset(
+                              'assets/assignments.png',
+                              height: 20.sp, // Adjust the size as needed
+                              width: 20.sp,
                             ),
                             onTap: () {
                               Navigator.push(
@@ -498,13 +482,14 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                           ),
                           Padding(
                             padding:
-                            EdgeInsets.only(left: 8, right: 8),
+                            EdgeInsets.only(left: 10.sp, right: 10.sp),
                             child: Divider(
-                              height: 1,
-                              color: Colors.grey.shade300,
-                              thickness: 1,
+                              height: 1.sp,
+                              color: Colors.grey.shade200,
+                              thickness: 1.sp,
                             ),
                           ),
+
 
                           ListTile(
                             title: Text(
@@ -512,24 +497,11 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.normal),
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ),
-                            trailing: Container(
-                              height: 20,
-                              width: 20,
-                              color: AppColors.primary,
-                              child: Icon(Icons.currency_rupee,color: Colors.white,)
-
-
-                              // Image.asset(
-                              //   'assets/assignments.png',
-                              //   height: 80, // Adjust the size as needed
-                              //   width: 80,
-                              // ),
-
-                            ),
+                            trailing:Icon(Icons.currency_rupee,color: Colors.white,size: 20.sp,),
                             onTap: () {
                               Navigator.pop(context);
 
@@ -537,23 +509,16 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               setState(() {
                                 _selectedIndex = 3; // Index of the Profile screen in _screens
                               });
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) {
-                              //       return DownloadPdf();
-                              //     },
-                              //   ),
-                              // );
+
                             },
                           ),
                           Padding(
                             padding:
-                            EdgeInsets.only(left: 8, right: 8),
+                            EdgeInsets.only(left: 10.sp, right: 10.sp),
                             child: Divider(
-                              height: 1,
-                              color: Colors.grey.shade300,
-                              thickness: 1,
+                              height: 1.sp,
+                              color: Colors.grey.shade200,
+                              thickness: 1.sp,
                             ),
                           ),
 
@@ -563,20 +528,14 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.normal),
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ),
-                            trailing: Container(
-                              height: 20,
-                              width: 20,
-                              color: AppColors.primary,
-                              child:  Image.asset(
-                                'assets/watch.png',
-                                height: 80, // Adjust the size as needed
-                                width: 80,
-                              ),
-
+                            trailing:  Image.asset(
+                              'assets/watch.png',
+                              height: 20.sp, // Adjust the size as needed
+                              width: 20.sp,
                             ),
                             onTap: () {
                               Navigator.push(
@@ -591,11 +550,11 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                           ),
                           Padding(
                             padding:
-                            EdgeInsets.only(left: 8, right: 8),
+                            EdgeInsets.only(left: 10.sp, right: 10.sp),
                             child: Divider(
-                              height: 1,
-                              color: Colors.grey.shade300,
-                              thickness: 1,
+                              height: 1.sp,
+                              color: Colors.grey.shade200,
+                              thickness: 1.sp,
                             ),
                           ),
 
@@ -605,23 +564,11 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.normal),
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ),
-                            trailing: Container(
-                              height: 20,
-                              width: 20,
-                              color: AppColors.primary,
-                              child: Icon(Icons.report,color: Colors.white,)
-
-                              // Image.asset(
-                              //   'assets/gallery.png',
-                              //   height: 80, // Adjust the size as needed
-                              //   width: 80,
-                              // ),
-
-                            ),
+                            trailing: Icon(Icons.report,color: Colors.white,size: 20.sp,),
                             onTap: () {
                               Navigator.pop(context);
                               Navigator.push(
@@ -637,14 +584,13 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                           ),
                           Padding(
                             padding:
-                            EdgeInsets.only(left: 8, right: 8),
+                            EdgeInsets.only(left: 10.sp, right: 10.sp),
                             child: Divider(
-                              height: 1,
-                              color: Colors.grey.shade300,
-                              thickness: 1,
+                              height: 1.sp,
+                              color: Colors.grey.shade200,
+                              thickness: 1.sp,
                             ),
                           ),
-
 
                           ListTile(
                             title: Text(
@@ -652,20 +598,14 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.normal),
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ),
-                            trailing: Container(
-                              height: 20,
-                              width: 20,
-                              color: AppColors.primary,
-                              child:  Image.asset(
-                                'assets/gallery.png',
-                                height: 80, // Adjust the size as needed
-                                width: 80,
-                              ),
-
+                            trailing: Image.asset(
+                              'assets/gallery.png',
+                              height: 20.sp, // Adjust the size as needed
+                              width: 20.sp,
                             ),
                             onTap: () {
                               Navigator.push(
@@ -680,11 +620,11 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                           ),
                           Padding(
                             padding:
-                            EdgeInsets.only(left: 8, right: 8),
+                            EdgeInsets.only(left: 10.sp, right: 10.sp),
                             child: Divider(
-                              height: 1,
-                              color: Colors.grey.shade300,
-                              thickness: 1,
+                              height: 1.sp,
+                              color: Colors.grey.shade200,
+                              thickness: 1.sp,
                             ),
                           ),
 
@@ -695,20 +635,14 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.normal),
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ),
-                            trailing: Container(
-                              height: 20,
-                              width: 20,
-                              color: AppColors.primary,
-                              child:  Image.asset(
-                                'assets/document.png',
-                                height: 80, // Adjust the size as needed
-                                width: 80,
-                              ),
-
+                            trailing: Image.asset(
+                              'assets/document.png',
+                              height: 20.sp, // Adjust the size as needed
+                              width: 20.sp,
                             ),
                             onTap: () {
                               Navigator.push(
@@ -723,14 +657,13 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                           ),
                           Padding(
                             padding:
-                            EdgeInsets.only(left: 8, right: 8),
+                            EdgeInsets.only(left: 10.sp, right: 10.sp),
                             child: Divider(
-                              height: 1,
-                              color: Colors.grey.shade300,
-                              thickness: 1,
+                              height: 1.sp,
+                              color: Colors.grey.shade200,
+                              thickness: 1.sp,
                             ),
                           ),
-
 
 
 
@@ -741,16 +674,15 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.normal),
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ),
-                            trailing: Container(
-                                height: 25,
-                                width: 25,
-                                child: Image.asset('assets/help.png',
-                                  color: Colors.white,
-                                )),
+                            trailing: Image.asset('assets/help.png',
+                              color: Colors.white,
+                              height: 20.sp, // Adjust the size as needed
+                              width: 20.sp,
+                            ),
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -763,66 +695,33 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
 
                             },
                           ),
-                          // Padding(
-                          //   padding:
-                          //   EdgeInsets.only(left: 8, right: 8),
-                          //   child: Divider(
-                          //     height: 1,
-                          //     color: Colors.grey.shade300,
-                          //     thickness: 1,
-                          //   ),
-                          // ),
-                          // ListTile(
-                          //   title: Text(
-                          //     'FAQs',
-                          //     style: GoogleFonts.cabin(
-                          //       textStyle: TextStyle(
-                          //           color: Colors.white,
-                          //           fontSize: 15,
-                          //           fontWeight: FontWeight.normal),
-                          //     ),
-                          //   ),
-                          //   trailing: Container(
-                          //       height: 20,
-                          //       width: 20,
-                          //       child: Image.asset('assets/faq.png')),
-                          //   onTap: () {
-                          //     Navigator.push(
-                          //       context,
-                          //       MaterialPageRoute(
-                          //         builder: (context) {
-                          //           return FaqScreen(appBar: 'FAQ',);
-                          //         },
-                          //       ),
-                          //     );
-                          //   },
-                          // ),
+
                           Padding(
                             padding:
-                            EdgeInsets.only(left: 8, right: 8),
+                            EdgeInsets.only(left: 10.sp, right: 10.sp),
                             child: Divider(
-                              height: 1,
-                              color: Colors.grey.shade300,
-                              thickness: 1,
+                              height: 1.sp,
+                              color: Colors.grey.shade200,
+                              thickness: 1.sp,
                             ),
                           ),
+
+
                           ListTile(
                             title: Text(
                               'Privacy',
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.normal),
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ),
-                            trailing: Container(
-                                height: 20,
-                                width: 20,
-                                child: Icon(
-                                  Icons.privacy_tip,
-                                  color: Colors.white,
-                                )),
+                            trailing:Icon(
+                              Icons.privacy_tip,
+                              color: Colors.white,
+                              size: 20.sp,
+                            ),
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -830,7 +729,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                                   builder: (context) {
                                     return WebViewExample(
                                       title: 'Privacy',
-                                      url: 'https://www.freeprivacypolicy.com/live/560e1305-dda8-45ce-8ea5-8c61009fad28',
+                                      url: 'https://cjmshimla.in/%20privacy_policy.html',
                                     );
                                   },
                                 ),
@@ -839,30 +738,29 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                           ),
                           Padding(
                             padding:
-                            EdgeInsets.only(left: 8, right: 8),
+                            EdgeInsets.only(left: 10.sp, right: 10.sp),
                             child: Divider(
-                              height: 1,
-                              color: Colors.grey.shade300,
-                              thickness: 1,
+                              height: 1.sp,
+                              color: Colors.grey.shade200,
+                              thickness: 1.sp,
                             ),
                           ),
+
                           ListTile(
                             title: Text(
                               'Terms & Condition',
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.normal),
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ),
-                            trailing: Container(
-                                height: 20,
-                                width: 20,
-                                child: Icon(
-                                  Icons.event_note_outlined,
-                                  color: Colors.white,
-                                )),
+                            trailing: Icon(
+                              Icons.event_note_outlined,
+                              color: Colors.white,
+                              size: 20.sp,
+                            ),
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -871,7 +769,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                                     return WebViewExample(
                                       title: 'Terms & Condition',
                                       url:
-                                      'https://www.freeprivacypolicy.com/live/560e1305-dda8-45ce-8ea5-8c61009fad28',
+                                      'https://cjmshimla.in/%20privacy_policy.html',
                                     );
                                   },
                                 ),
@@ -883,11 +781,11 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
 
                           Padding(
                             padding:
-                            EdgeInsets.only(left: 8, right: 8),
+                            EdgeInsets.only(left: 10.sp, right: 10.sp),
                             child: Divider(
-                              height: 1,
-                              color: Colors.grey.shade300,
-                              thickness: 1,
+                              height: 1.sp,
+                              color: Colors.grey.shade200,
+                              thickness: 1.sp,
                             ),
                           ),
                           ListTile(
@@ -896,17 +794,15 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.normal),
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ),
-                            trailing: Container(
-                                height: 20,
-                                width: 20,
-                                child: Icon(
-                                  Icons.logout,
-                                  color: Colors.white,
-                                )),
+                            trailing: Icon(
+                              Icons.logout,
+                              color: Colors.white,
+                              size: 20.sp,
+                            ),
                             onTap: () async {
                               final prefs = await SharedPreferences.getInstance();
                               await prefs.clear(); // Clear the stored token
@@ -920,7 +816,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(bottom: 15),
+                      padding: EdgeInsets.only(bottom: 15.sp),
                     ),
                   ],
                 ),

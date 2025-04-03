@@ -472,7 +472,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                       borderRadius: BorderRadius.circular(5.r),
                     ),
                     child: Container(
-                      height: 40.sp,
+                      height: 45.sp,
                       width: 150.sp,
                       child: SearchableDropdownFormField<int>.paginated(
                         controller: searchableDropdownController,
@@ -485,7 +485,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                               fontWeight: FontWeight.w500),
                         ),
                         isDialogExpanded: true,
-                        margin: const EdgeInsets.all(6),
+                        margin:  EdgeInsets.all(3.sp),
                         paginatedRequest: (int page, String? searchKey) async {
                           return await getAnimeList(page: page, key: searchKey);
                         },
@@ -529,7 +529,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                               color: Colors.black87,
                               fontWeight: FontWeight.w500),
                         ),
-                        margin: const EdgeInsets.all(6),
+                        margin:  EdgeInsets.all(3.sp),
                         paginatedRequest: (int page, String? searchKey) async {
                           return await getAnimeList2(
                               page: page, key: searchKey);

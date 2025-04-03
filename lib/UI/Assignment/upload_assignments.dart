@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -168,20 +169,20 @@ class _AssignmentUploadScreenState extends State<AssignmentUploadScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primary,
+      backgroundColor: AppColors.secondary,
 
       appBar: AppBar(
-        title: Text("Upload Assignment",
+        title: Text("Upload Home Work".toUpperCase(),
             style: GoogleFonts.montserrat(
               textStyle: Theme.of(context).textTheme.displayLarge,
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w700,
               fontStyle: FontStyle.normal,
-              color: AppColors.textblack,
+              color: AppColors.textwhite,
             ),
         ),
-        backgroundColor: AppColors.primary,
-        iconTheme: IconThemeData(color: AppColors.textblack,),
+        backgroundColor: AppColors.secondary,
+        iconTheme: IconThemeData(color: AppColors.textwhite,),
       ),
 
       body: Padding(
@@ -206,19 +207,19 @@ class _AssignmentUploadScreenState extends State<AssignmentUploadScreen> {
                     onPressed: isLoading ? null : uploadAssignmentApi, // Disable button when loading
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.orange,
-                      padding: EdgeInsets.symmetric(vertical: 14, horizontal: 50),
+                      padding: EdgeInsets.symmetric(vertical: 12.sp, horizontal: 40.sp),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
                     child: isLoading
                         ? SizedBox(
-                      width: 24,
-                      height: 24,
+                      width: 20.sp,
+                      height: 20.sp,
                       child: CircularProgressIndicator(
                         color: Colors.white,
                         strokeWidth: 3,
                       ),
                     )
-                        : Text("Upload Assignment", style: TextStyle(fontSize: 16, color: Colors.white)),
+                        : Text("Upload Assignment", style: TextStyle(fontSize: 14.sp, color: Colors.white)),
                   ),
 
 

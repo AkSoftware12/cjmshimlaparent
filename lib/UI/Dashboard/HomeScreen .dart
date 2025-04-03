@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,8 +6,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scrollable_clean_calendar/controllers/clean_calendar_controller.dart';
-import 'package:scrollable_clean_calendar/scrollable_clean_calendar.dart';
-import 'package:scrollable_clean_calendar/utils/enums.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -26,8 +25,9 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../bottom_navigation.dart';
 
+
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key,});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -37,20 +37,21 @@ class _HomeScreenState extends State<HomeScreen> {
   Map<String, dynamic>? studentData;
   List assignments = []; // Declare a list to hold API data
   bool isLoading = true;
+   late final String pass;
   late CleanCalendarController calendarController;
   final List<Map<String, String>> items = [
     {
-      'name': 'Assignments',
+      'name': 'Home Work',
       'image': 'assets/assignments.png',
     },
     {
       'name': 'Time Table',
       'image': 'assets/watch.png',
     },
-    {
-      'name': 'Home Work',
-      'image': 'assets/home_work.png',
-    },
+    // {
+    //   'name': 'Home Work',
+    //   'image': 'assets/home_work.png',
+    // },
     // {
     //   'name': 'Subject',
     //   'image': 'assets/physics.png',
@@ -156,33 +157,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+
+
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: AppColors.secondary,
-
-      // appBar: AppBar(
-      //   backgroundColor: AppColors.secondary,
-      //   title: Column(
-      //     children: [
-      //       _buildAppBar(),
-      //     ],
-      //   ),
-      //   actions: [
-      //     Padding(
-      //       padding: const EdgeInsets.all(15.0),
-      //       child: GestureDetector(
-      //           onTap: () {},
-      //           child: Icon(
-      //             Icons.notification_add,
-      //             size: 26,
-      //             color: Colors.white,
-      //           )),
-      //     )
-      //
-      //     // Container(child: Icon(Icons.ice_skating)),
-      //   ],
-      // ),
       body: isLoading
           ? const Center(
               child: CupertinoActivityIndicator(radius: 20),
@@ -193,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CarouselExample(),
-                  SizedBox(height: 10),
+                  SizedBox(height: 10.sp),
 
                   CarouselFees(
                     status: 'due',
@@ -212,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     email:studentData?['email']??'',
                     address: studentData?['address']??'',
                     payDate: '',
-                    dueAmount: '1250',
+                    dueAmount: '0',
 
                   ),
 
@@ -234,24 +216,44 @@ class _HomeScreenState extends State<HomeScreen> {
                   _buildsellAll('Latest Photo', ''),
 
                   Container(
-                    height: 220,
+                    height: 150.sp,
                     width: double.infinity,
-                    child: Image.network(
-                      'https://webcjm.cjmshimla.in/upload/banners/1740211256_cjmshimlabanner3.png',
-                      fit: BoxFit.fill,
+                    child:CachedNetworkImage(
+                      imageUrl: 'https://webcjm.cjmshimla.in/upload/banners/1740211256_cjmshimlabanner3.png',
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      placeholder: (context, url) => Center(
+                        child: CupertinoActivityIndicator(radius: 20, color: Colors.white),
+                      ),
+                      errorWidget: (context, url, error) => Center(
+                        child: Icon(Icons.image, color: Colors.red),
+                      ),
+                      fadeInDuration: Duration.zero, // Removes fade-in effect
                     ),
+
+
+
                   ),
                   Divider(
                     thickness: 1.sp,
                     color: Colors.grey,
                   ),
                   Container(
-                    height: 220,
+                    height: 150.sp,
                     width: double.infinity,
-                    child: Image.network(
-                      'https://webcjm.cjmshimla.in/upload/banners/1740211232_cjmshimlabanner1.png',
-                      fit: BoxFit.fill,
+                    child: CachedNetworkImage(
+                      imageUrl: 'https://webcjm.cjmshimla.in/upload/banners/1740211232_cjmshimlabanner1.png',
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      placeholder: (context, url) => Center(
+                        child: CupertinoActivityIndicator(radius: 20, color: Colors.white),
+                      ),
+                      errorWidget: (context, url, error) => Center(
+                        child: Icon(Icons.image, color: Colors.red),
+                      ),
+                      fadeInDuration: Duration.zero, // Removes fade-in effect
                     ),
+
                   ),
 
 
@@ -261,105 +263,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildWelcomeHeader() {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: AppColors.secondary,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 30,
-            backgroundImage: studentData!['photo'] != null
-                ? NetworkImage(studentData!['photo'])
-                : null,
-            child: studentData!['photo'] == null
-                ? Image.asset(AppAssets.logo, fit: BoxFit.cover)
-                : null,
-          ),
-          const SizedBox(width: 16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Welcome',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textwhite,
-                ),
-              ),
-              Text(
-                studentData!['student_name'] ?? 'Student',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textwhite,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildAppBar() {
-    return Row(
-      children: [
-        CircleAvatar(
-          backgroundColor: Colors.white,
-          radius: 20,
-          backgroundImage: studentData?['photo'] != null
-              ? NetworkImage(studentData!['photo'])
-              : null,
-          child: studentData?['photo'] == null
-              ? Image.asset(AppAssets.logo, fit: BoxFit.cover)
-              : null,
-        ),
-        const SizedBox(width: 16),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Welcome !',
-              style: GoogleFonts.montserrat(
-                textStyle: Theme.of(context).textTheme.displayLarge,
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                fontStyle: FontStyle.normal,
-                color: AppColors.textwhite,
-              ),
-            ),
-            Text(
-              studentData?['student_name'] ?? 'Student',
-              // Fallback to 'Student' if null
-              style: GoogleFonts.montserrat(
-                textStyle: Theme.of(context).textTheme.displayLarge,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                fontStyle: FontStyle.normal,
-                color: AppColors.textwhite,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
 
   Widget _buildGridview() {
     return Padding(
-      padding: const EdgeInsets.all(2.0),
+      padding:  EdgeInsets.all(5.sp),
       child: GridView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
@@ -373,7 +281,7 @@ class _HomeScreenState extends State<HomeScreen> {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              if (items[index]['name'] == 'Assignments') {
+              if (items[index]['name'] == 'Home Work') {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -427,15 +335,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                 );
-              } else if (items[index]['name'] == 'Home Work') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return HomeWorkScreen();
-                    },
-                  ),
-                );
               }
             },
             child: Card(
@@ -450,18 +349,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Image.asset(
                       items[index]['image']!,
-                      height: 50, // Adjust the size as needed
-                      width: 50,
+                      height: 50.sp, // Adjust the size as needed
+                      width: 50.sp,
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 15.sp,
                     ),
                     Text(
                       items[index]['name']!,
                       style: GoogleFonts.montserrat(
                         textStyle: Theme.of(context).textTheme.displayLarge,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w800,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w700,
                         fontStyle: FontStyle.normal,
                         color: AppColors.textwhite,
                       ),
@@ -476,113 +375,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildListView() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ListView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: assignments.length, // Number of items in the list
-        itemBuilder: (context, index) {
-          final assignment = assignments[index];
-
-          String description =
-              html_parser.parse(assignment['description']).body?.text ?? '';
-
-          return GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return AssignmentListScreen();
-                  },
-                ),
-              );
-            },
-            child: Card(
-              elevation: 5,
-              color: AppColors.secondary,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-                side: BorderSide(
-                  color: Colors.grey.shade300, // Border color
-                  width: 1.5, // Border width
-                ), // Rounded corners
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Card(
-                  color: HexColor('#f2888c'),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    side: BorderSide(
-                      color: Colors.grey.shade300, // Border color
-                      width: 1, // Border width
-                    ), // Rounded corners
-                  ),
-                  child: ListTile(
-                    contentPadding: EdgeInsets.all(8.0),
-                    leading: Container(
-                      height: 50,
-                      width: 50,
-                      decoration: BoxDecoration(
-                        color: AppColors.textwhite,
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      child: Center(
-                        child: Text(
-                          '${index + 1}', // Displaying the index number
-                          style: GoogleFonts.montserrat(
-                            fontSize: 25,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.textblack,
-                          ),
-                        ),
-                      ),
-                    ),
-                    title: Text(
-                      assignments[index]['title'].toString().toUpperCase(),
-                      style: GoogleFonts.montserrat(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.textwhite,
-                      ),
-                    ),
-                    subtitle: Text(
-                      description,
-                      style: GoogleFonts.montserrat(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey.shade300,
-                      ),
-                    ),
-                    trailing: Icon(Icons.arrow_forward_ios,
-                        color: Colors.white, size: 25),
-                    // Optional arrow icon
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return AssignmentListScreen();
-                          },
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
 
   Widget _buildsellAll(String title, String see) {
     return Padding(
-      padding: const EdgeInsets.only(left: 5.0, right: 15, top: 10, bottom: 10),
+      padding:  EdgeInsets.only(left: 10.sp, right: 5.sp, bottom: 5.sp),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -590,7 +386,7 @@ class _HomeScreenState extends State<HomeScreen> {
             title,
             style: GoogleFonts.montserrat(
               textStyle: Theme.of(context).textTheme.displayLarge,
-              fontSize: 20,
+              fontSize: MediaQuery.of(context).size.width*0.04,
               fontWeight: FontWeight.w700,
               fontStyle: FontStyle.normal,
               color: AppColors.textwhite,
@@ -600,7 +396,7 @@ class _HomeScreenState extends State<HomeScreen> {
             see,
             style: GoogleFonts.montserrat(
               textStyle: Theme.of(context).textTheme.displayLarge,
-              fontSize: 15,
+              fontSize: MediaQuery.of(context).size.width*0.04,
               fontWeight: FontWeight.w900,
               fontStyle: FontStyle.normal,
               color: AppColors.textwhite,
@@ -625,14 +421,6 @@ class _CarouselExampleState extends State<CarouselExample> {
     'https://webcjm.cjmshimla.in/upload/banners/1740211256_cjmshimlabanner3.png',
   ];
 
-  // final List<String> imgList = [
-  //   'https://www.cjmshimla.org/Images/sld1.jpg',
-  //   'https://www.cjmshimla.org/Images/sld3.jpg',
-  //   'https://www.cjmshimla.org/Images/sld4.jpg',
-  //   'https://www.cjmshimla.org/Images/sld5.jpg',
-  //
-  // ];
-
   int _currentIndex = 0;
   final CarouselSliderController _controller = CarouselSliderController();
 
@@ -643,11 +431,11 @@ class _CarouselExampleState extends State<CarouselExample> {
       children: [
         // Carousel
         SizedBox(
-          width: MediaQuery.of(context).size.width, // Ensure proper width
+          width: MediaQuery.of(context).size.width*095, // Ensure proper width
           child: CarouselSlider(
             controller: _controller,
             options: CarouselOptions(
-              height: 170,
+              height: MediaQuery.of(context).size.height*0.18,
               autoPlay: true,
               viewportFraction: 1,
               enableInfiniteScroll: true,
@@ -663,31 +451,47 @@ class _CarouselExampleState extends State<CarouselExample> {
             ),
             items: imgList.map((item) {
               return Padding(
-                padding: const EdgeInsets.all(5.0),
+                padding:  EdgeInsets.all(5.sp),
                 child: GestureDetector(
                   onTap: () {
                     print('Image Clicked: $item');
                   },
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: Image.network(
-                      item,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(
-                            child:
-                                CircularProgressIndicator()); // Show loader while loading
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        return Center(
-                            child: Icon(Icons.error,
-                                color: Colors
-                                    .red)); // Show error icon if image fails
-                      },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.sp),
+                  child: CachedNetworkImage(
+                    imageUrl: item,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    placeholder: (context, url) => Center(
+                      child: CupertinoActivityIndicator(radius: 20, color: Colors.white),
                     ),
+                    errorWidget: (context, url, error) => Center(
+                      child: Icon(Icons.image, color: Colors.red),
+                    ),
+                    fadeInDuration: Duration.zero, // Removes fade-in effect
                   ),
+                ),
+
+                  // ClipRRect(
+                  //   borderRadius: BorderRadius.circular(8.sp),
+                  //   child: Image.network(
+                  //     item,
+                  //     fit: BoxFit.cover,
+                  //     width: double.infinity,
+                  //     loadingBuilder: (context, child, loadingProgress) {
+                  //       if (loadingProgress == null) return child;
+                  //       return  Center(
+                  //         child: CupertinoActivityIndicator(radius: 20,color: Colors.white,),
+                  //       ); // Show loader while loading
+                  //     },
+                  //     errorBuilder: (context, error, stackTrace) {
+                  //       return Center(
+                  //           child: Icon(Icons.image,
+                  //               color: Colors
+                  //                   .red)); // Show error icon if image fails
+                  //     },
+                  //   ),
+                  // ),
                 ),
               );
             }).toList(),
@@ -695,13 +499,13 @@ class _CarouselExampleState extends State<CarouselExample> {
         ),
 
         // Dots Indicator
-        SizedBox(height: 1),
+        SizedBox(height: 1.sp),
         AnimatedSmoothIndicator(
           activeIndex: _currentIndex,
           count: imgList.length,
           effect: ExpandingDotsEffect(
-            dotHeight: 8,
-            dotWidth: 8,
+            dotHeight: 5.sp,
+            dotWidth: 12.sp,
             activeDotColor: Colors.redAccent,
             dotColor: Colors.grey.shade400,
           ),
@@ -755,7 +559,7 @@ class CarouselFees extends StatelessWidget {
         padding: const EdgeInsets.all(0.0),
         child: CarouselSlider(
           options: CarouselOptions(
-            height: 180,
+            height: MediaQuery.of(context).size.height*0.18,
             autoPlay: false,
             viewportFraction: 1,
             enableInfiniteScroll: true,
@@ -785,31 +589,6 @@ class CarouselFees extends StatelessWidget {
               payDate: payDate,
             );
 
-            //   GestureDetector(
-            //   onTap: () {
-            //     print('Image Clicked: ${item['text']}');
-            //   },
-            //   child: Padding(
-            //     padding: const EdgeInsets.all(5.0),
-            //     child: Container(
-            //       width: double.infinity,
-            //       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-            //       decoration: BoxDecoration(
-            //         color: Colors.black.withOpacity(0.6),
-            //         borderRadius: BorderRadius.circular(5),
-            //       ),
-            //       child: Text(
-            //         item['text']!,
-            //         textAlign: TextAlign.center,
-            //         style: TextStyle(
-            //           color: Colors.white,
-            //           fontSize: 16,
-            //           fontWeight: FontWeight.bold,
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // );
           }).toList(),
         ),
       ),
@@ -839,6 +618,7 @@ class DueAmountCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
       ),
       child: Container(
+        width: MediaQuery.of(context).size.width * 0.93,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           gradient: LinearGradient(
@@ -855,7 +635,7 @@ class DueAmountCard extends StatelessWidget {
             Text(
               "Due Amount",
               style: GoogleFonts.montserrat(
-                fontSize: 20,
+                fontSize: 15.sp,
                 fontWeight: FontWeight.bold,
                 color: HexColor('#f62c13'), // Highlight in Yellow
               ),
@@ -866,46 +646,33 @@ class DueAmountCard extends StatelessWidget {
             Text(
               "₹ ${dueAmount}",
               style: GoogleFonts.montserrat(
-                fontSize: 26,
+                fontSize: 20.sp,
                 fontWeight: FontWeight.w700,
                 color: HexColor('#f62c13'), // Highlight in Yellow
               ),
             ),
             SizedBox(height: 12),
 
-            // Pay Now Button
             SizedBox(
               width: double.infinity,
-              child:CommonNdpsButton(buttonText: "Pay Now",
-                status: status,
-                amount: '1',
-                // amount: dueAmount,
-                custFirstName: custFirstName,
-                custLastName: custLastName,
-                mobile: mobile, email: email,
-                address: address,
+              child:GestureDetector(
+                onTap: (){
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BottomNavBarScreen(initialIndex: 3,),
+                    ),
+                  );
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.redAccent.shade100,
+                      borderRadius: BorderRadius.circular(10.sp)
+                  ),
+                  child: Center(child: Text('Pay',style: TextStyle(color: Colors.white,fontSize: 16.sp),)),
+                ),
               ),
 
-
-
-              // ElevatedButton(
-              //   onPressed: onPayNow,
-              //   style: ElevatedButton.styleFrom(
-              //     backgroundColor: Colors.white, // White button for contrast
-              //     padding: EdgeInsets.symmetric(vertical: 12),
-              //     shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(10),
-              //     ),
-              //   ),
-              //   child: Text(
-              //     "Pay Now",
-              //     style: GoogleFonts.montserrat(
-              //       fontSize: 16,
-              //       fontWeight: FontWeight.w600,
-              //       color: Colors.redAccent, // Matching gradient color
-              //     ),
-              //   ),
-              // ),
             ),
           ],
         ),

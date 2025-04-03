@@ -16,23 +16,23 @@ class CommonNdpsButton extends StatelessWidget {
   final String mobile; //optional
   final String email; //optional
   final String address;
+  final List<dynamic> additionalData; // New parameter for passing a list
 
 
-
-  const CommonNdpsButton({Key? key, this.buttonText = "Open Payment", required this.status, required this.amount, required this.custFirstName, required this.custLastName, required this.mobile, required this.email, required this.address}) : super(key: key);
+  const CommonNdpsButton({Key? key, this.buttonText = "Open Payment", required this.status, required this.amount, required this.custFirstName, required this.custLastName, required this.mobile, required this.email, required this.address, required this.additionalData}) : super(key: key);
 
   // merchant configuration data
-  final String login = "317157"; //mandatory
-  final String password = 'Test@123'; //mandatory
-  final String prodid = 'NSE'; //mandatory
-  final String requestHashKey = 'KEY1234567234'; //mandatory
-  final String responseHashKey = 'KEYRESP123657234'; //mandatory
-  final String requestEncryptionKey = 'A4476C2062FFA58980DC8F79EB6A799E'; //mandatory
-  final String responseDecryptionKey = '75AEF0FA1B94B3C10D4F5B268F757F11'; //mandatory
+  final String login = "686507"; //mandatory
+  final String password = '763d350a'; //mandatory
+  final String prodid = 'SCHOOL'; //mandatory
+  final String requestHashKey = 'd6ab820f036a9bc6c3'; //mandatory
+  final String responseHashKey = 'd0b70f551f424ecc57'; //mandatory
+  final String requestEncryptionKey = '9020F0D0B9BBCBF5D30BF6E4F8658A49'; //mandatory
+  final String responseDecryptionKey = '953FBA81A1CFE8C83FE1E2D21494D2B0'; //mandatory
   final String txnid = 'test240223'; // mandatory // this should be unique each time
   final String clientcode = "NAVIN"; //mandatory
   final String txncurr = "INR"; //mandatory
-  final String mccCode = "5499"; //mandatory
+  final String mccCode = "8220"; //mandatory
   final String merchType = "R"; //mandatory
   // final String amount = "1.00"; //mandatory
 
@@ -115,7 +115,7 @@ class CommonNdpsButton extends StatelessWidget {
 
 
     return ElevatedButton(
-      onPressed: () => status.toLowerCase()=='due'|| status.toLowerCase() == 'active' || status.toLowerCase() == 'inactive'||status.toLowerCase() == 'pending' ? _initNdpsPayment(context, responseHashKey, responseDecryptionKey):null,
+      onPressed: () => _initNdpsPayment(context, responseHashKey, responseDecryptionKey),
       style: ElevatedButton.styleFrom(
         backgroundColor:status.toLowerCase()=='due'|| status.toLowerCase() == 'active' || status.toLowerCase() == 'inactive'||status.toLowerCase() == 'pending'
             ? statusColor
@@ -135,6 +135,8 @@ class CommonNdpsButton extends StatelessWidget {
       ),
     );
   }
+
+
 
   void _initNdpsPayment(BuildContext context, String responseHashKey, String responseDecryptionKey) {
     showLoadingDialog(context);
@@ -207,7 +209,7 @@ class CommonNdpsButton extends StatelessWidget {
         context,
         MaterialPageRoute(
             builder: (context) => WebViewContainer(
-                mode, payDetails, responseHashKey, responseDecryptionKey)));
+                mode, payDetails, responseHashKey, responseDecryptionKey,[],'', onReturn: () {  },)));
   }
 
   _getJsonPayloadData() {

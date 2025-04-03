@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
@@ -9,6 +11,8 @@ import '/UI/bottom_navigation.dart';
 import '/constants.dart';
 import '../../strings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+
+import 'login_student.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -26,13 +30,12 @@ class _LoginPageState extends State<LoginPage> {
   bool _rememberMe = false;
   bool _isPasswordVisible = false;
 
+  List loginStudent = []; // Declare a list to hold API data
+
+
   Future<void> _login() async {
-    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-    String? deviceToken = await _firebaseMessaging.getToken();
-    print('Device id: $deviceToken');
     if (!_formKey.currentState!.validate()) return;
 
-    print('${AppStrings.apiLoginUrl}${ApiRoutes.login}'); // Debug: Print the API URL
     setState(() {
       _isLoading = true;
     });
@@ -43,65 +46,52 @@ class _LoginPageState extends State<LoginPage> {
         data: {
           'email': _emailController.text,
           'password': _passwordController.text,
-          'fcm': deviceToken,
         },
         options: Options(
           headers: {'Content-Type': 'application/json'},
         ),
       );
 
-      print(' Device token : - $deviceToken');
-
-      print('${AppStrings.responseStatusDebug}${response.statusCode}'); // Debug: Print status code
-      print('${AppStrings.responseDataDebug}${response.data}'); // Debug: Print the response data
-
       if (response.statusCode == 200) {
-        final responseData = response.data;
+        final jsonResponse = response.data; // FIX: No need to decode
 
-        if (responseData['success'] == true) {
-          // Save token in SharedPreferences
+        if (jsonResponse['success'] == true) {
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString('token', responseData['token']);
-          print('${AppStrings.tokenSaved}${responseData['token']}'); // Debug: Print the saved token
+          await prefs.setString('studentList', jsonEncode(jsonResponse['students']));
+          setState(() {
+            loginStudent = jsonResponse['students']; // Update state with fetched data
+            _isLoading = false;
+            prefs.setString('password', _passwordController.text);
+            print('Login Student: $loginStudent');
+          });
 
-          // Retrieve the token
-          String? token = prefs.getString('token');
-          print('${AppStrings.tokenRetrieved}$token'); // Debug: Print retrieved token
-
-          // Navigate to the BottomNavBarScreen with the token
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => BottomNavBarScreen(initialIndex: 0,),
+              builder: (context) => LoginStudentPage(pass: '${_passwordController.text}',),
             ),
           );
+
+
         } else {
-          print('${AppStrings.loginFailedDebug}${responseData['message']}'); // Debug: Print failure message
-          _showErrorDialog(responseData['message']);
+          print('${AppStrings.loginFailedDebug}${jsonResponse['message']}');
+          _showErrorDialog(jsonResponse['message']);
         }
       } else {
-        print('${AppStrings.loginFailedMessage} ${response.statusCode}'); // Debug: Unexpected status code
+        print('${AppStrings.loginFailedMessage} ${response.statusCode}');
         _showErrorDialog(AppStrings.loginFailedMessage);
       }
     } on DioException catch (e) {
-      print('${AppStrings.dioExceptionDebug}${e.message}'); // Debug: Print DioException message
-
       String errorMessage = AppStrings.unexpectedError;
-      if (e.response != null) {
-        print('${AppStrings.errorResponseDebug}${e.response?.data}'); // Debug: Print error response data
-
-        if (e.response?.data is Map<String, dynamic>) {
-          errorMessage = e.response?.data['message'] ?? errorMessage;
-        } else if (e.response?.data is String) {
-          errorMessage = e.response?.data;
-        }
-      } else {
-        errorMessage = e.message ?? 'Unable to connect to the server.';
+      if (e.response != null && e.response?.data is Map<String, dynamic>) {
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else if (e.response?.data is String) {
+        errorMessage = e.response?.data;
       }
 
       _showErrorDialog(errorMessage);
     } catch (e) {
-      print('${AppStrings.generalErrorDebug}$e'); // Catch any other errors
+      print('${AppStrings.generalErrorDebug}$e');
       _showErrorDialog(AppStrings.unexpectedError);
     } finally {
       setState(() {
@@ -128,22 +118,88 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // Show dialog for changing password
+  void _showChangePasswordDialog(BuildContext context) {
+    final oldPasswordController = TextEditingController();
+    final newPasswordController = TextEditingController();
+    final confirmPasswordController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Change Password"),
+          content: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                TextField(
+                  controller: oldPasswordController,
+                  obscureText: true,
+                  decoration: InputDecoration(labelText: 'Old Password'),
+                ),
+                TextField(
+                  controller: newPasswordController,
+                  obscureText: true,
+                  decoration: InputDecoration(labelText: 'New Password'),
+                ),
+                TextField(
+                  controller: confirmPasswordController,
+                  obscureText: true,
+                  decoration: InputDecoration(labelText: 'Confirm Password'),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                // Handle password change logic
+                String oldPassword = oldPasswordController.text;
+                String newPassword = newPasswordController.text;
+                String confirmPassword = confirmPasswordController.text;
+
+                if (newPassword == confirmPassword) {
+                  // Proceed with password change
+                  print("Old Password: $oldPassword");
+                  print("New Password: $newPassword");
+                  Navigator.of(context).pop();
+                } else {
+                  // Show error if passwords don't match
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("New passwords do not match")),
+                  );
+                }
+              },
+              child: Text("Change"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primary,
+      backgroundColor: AppColors.secondary,
       body: Center(
         child: SingleChildScrollView(
           child: Column(
             children: [
-
-              const SizedBox(height: 20),
+               SizedBox(height: 15.sp),
               Container(
-                width: 350,
-                padding: const EdgeInsets.all(20),
+                width: MediaQuery.of(context).size.width*0.90,
+                // width: 350.sp,
+                padding:  EdgeInsets.all(15.sp),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(10.sp),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black26,
@@ -161,7 +217,7 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           Container(
                             height: 110.sp,
-                            width: 180.sp,
+                            width: 150.sp,
                             decoration: BoxDecoration(
                                 color: Colors.grey.shade200,
                                 borderRadius: BorderRadius.circular(10.sp)
@@ -180,69 +236,79 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 5),
-                          const Text(
+                           SizedBox(height: 5.sp),
+                           Text(
                             AppStrings.studentLogin,
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: MediaQuery.of(context).size.width*0.04,
+                              // fontSize: 17.sp,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
+                       SizedBox(height: 15.sp),
                       // Email Input
-                      TextFormField(
-                        controller: _emailController,
-                        decoration: InputDecoration(
-                          prefixIcon: const Icon(CupertinoIcons.mail_solid),
-                          hintText: AppStrings.email,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return AppStrings.invalidEmail;
-                          }
-                          if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                            return AppStrings.invalidEmail;
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 15),
-                      // Password Input
-                      TextFormField(
-                        controller: _passwordController,
-                        obscureText: !_isPasswordVisible,
-                        decoration: InputDecoration(
-                          prefixIcon: const Icon(CupertinoIcons.lock_shield_fill),
-                          hintText: AppStrings.password,
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _isPasswordVisible
-                                  ? CupertinoIcons.eye_slash_fill
-                                  : CupertinoIcons.eye_solid,
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height*0.07,
+                        child: TextFormField(
+                          controller: _emailController,
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.account_circle_outlined),
+                            hintText: AppStrings.email,
+                            hintStyle: TextStyle(color: Colors.grey.shade500,fontSize: MediaQuery.of(context).size.width*0.035),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.sp),
                             ),
-                            onPressed: () {
-                              setState(() {
-                                _isPasswordVisible = !_isPasswordVisible;
-                              });
-                            },
                           ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
+                          // validator: (value) {
+                          //   if (value == null || value.isEmpty) {
+                          //     return AppStrings.invalidEmail;
+                          //   }
+                          //   if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                          //     return AppStrings.invalidEmail;
+                          //   }
+                          //   return null;
+                          // },
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return AppStrings.passwordRequired;
-                          }
-                          return null;
-                        },
                       ),
-                      const SizedBox(height: 10),
+                       SizedBox(height: 15.sp),
+                      // Password Input
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height*0.07,
+                        child: TextFormField(
+                          controller: _passwordController,
+                          obscureText: !_isPasswordVisible,
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(CupertinoIcons.lock_shield_fill),
+                            hintText: AppStrings.password,
+                            hintStyle: TextStyle(color: Colors.grey.shade500,fontSize: MediaQuery.of(context).size.width*0.035),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _isPasswordVisible
+                                    ? CupertinoIcons.eye_slash_fill
+                                    : CupertinoIcons.eye_solid,size:MediaQuery.of(context).size.height*0.03,
+
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible;
+                                });
+                              },
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.sp),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return AppStrings.passwordRequired;
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                       SizedBox(height: 10.sp),
                       Row(
                         children: [
                           CupertinoSwitch (
@@ -252,19 +318,21 @@ class _LoginPageState extends State<LoginPage> {
                                 _rememberMe = value!;
                               });
                             },
+
                           ),
-                          const Text(AppStrings.rememberMe),
+                           Text(AppStrings.rememberMe,style: TextStyle(fontSize: MediaQuery.of(context).size.width*0.03,
+                          ),),
                         ],
                       ),
-                      const SizedBox(height: 10),
+                       SizedBox(height: 10.sp),
                       if (_isLoading) const CircularProgressIndicator() else SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primary,
-                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            padding:  EdgeInsets.symmetric(vertical: 15.sp),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(8.sp),
                             ),
                           ),
                           onPressed: () {
@@ -280,7 +348,7 @@ class _LoginPageState extends State<LoginPage> {
                           },
                           child:  Text(
                             AppStrings.login,
-                            style: TextStyle(fontSize: 16, color: AppColors.textwhite),
+                            style: TextStyle(fontSize: MediaQuery.of(context).size.width*0.04, color: AppColors.textwhite),
                           ),
                         ),
                       ),
@@ -293,7 +361,7 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
 
                   Padding(
-                    padding:  EdgeInsets.only(top: 8.0),
+                    padding:  EdgeInsets.only(top: 8.sp),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

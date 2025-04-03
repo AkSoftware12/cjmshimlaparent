@@ -4,17 +4,26 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../UI/bottom_navigation.dart';
+import '../constants.dart';
 import 'atom_pay_helper.dart';
+import 'package:http/http.dart' as http;
 
 class WebViewContainer extends StatefulWidget {
   final mode;
   final payDetails;
   final responsehashKey;
   final responseDecryptionKey;
+  final List<String> selectedFees;
+  final String orderId;
+  final VoidCallback onReturn;
+
+
 
   WebViewContainer(this.mode, this.payDetails, this.responsehashKey,
-      this.responseDecryptionKey);
+      this.responseDecryptionKey, this.selectedFees, this.orderId,   {super.key,required this.onReturn,});
 
   @override
   createState() => _WebViewContainerState(this.mode, this.payDetails,
@@ -36,6 +45,9 @@ class _WebViewContainerState extends State<WebViewContainer> {
   void initState() {
     super.initState();
     // if (Platform.isAndroid) WebView.platform  = SurfaceAndroidViewController();
+
+    print('OrderId Webview : ${widget.orderId.toString()}');
+    print('OrderId array : ${widget.selectedFees.toString()}');
   }
 
   _WebViewContainerState(this.mode, this.payDetails, this._responsehashKey,
@@ -176,7 +188,24 @@ class _WebViewContainerState extends State<WebViewContainer> {
       _showPaymentCanceledDialog(context,data);
 
     } else if(transactionResult=='Transaction Success'){
-      _showPaymentSuccessDialog(context,data);
+
+
+      // widget.onReturn();
+
+      print('Ravikant');
+      orderCreate(context, data);
+
+
+      Future.delayed(Duration(seconds: 5), () {
+        widget.onReturn();
+
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => BottomNavBarScreen(initialIndex: 3),
+        //   ),
+        // );
+      });
 
     }
 
@@ -218,6 +247,53 @@ class _WebViewContainerState extends State<WebViewContainer> {
               ],
             ));
     return Future.value(true);
+  }
+
+  Future<void> orderCreate(BuildContext context, String dataString) async {
+    try {
+
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token') ?? '';
+
+      if (token.isEmpty) {
+        print("Error: Token not found");
+        return;
+      }
+
+      print("Token: $token");
+
+      final url = Uri.parse(ApiRoutes.atompay);
+
+      Map<String, dynamic> body = {
+        "fee_ids": widget.selectedFees,
+        "order_id": widget.orderId,
+      };
+
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200) {
+        print("Success: ${response.body}");
+        _showPaymentSuccessDialog(context, dataString);
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => BottomNavBarScreen(initialIndex: 3,),
+        //   ),
+        // );
+
+      } else {
+        print("Failed: ${response.statusCode}, Response: ${response.body}");
+      }
+    } catch (e) {
+      print("Unexpected Error: $e");
+    }
   }
 
   void _showPaymentSuccessDialog(BuildContext context,String data) {

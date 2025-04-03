@@ -139,7 +139,7 @@ class HomeGateway extends StatelessWidget {
         context,
         MaterialPageRoute(
             builder: (context) => WebViewContainer(
-                mode, payDetails, responseHashKey, responseDecryptionKey)));
+                mode, payDetails, responseHashKey, responseDecryptionKey,[],'', onReturn: () {  },)));
   }
 
   _getJsonPayloadData() {

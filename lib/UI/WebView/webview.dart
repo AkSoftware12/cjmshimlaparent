@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:open_file/open_file.dart';
 
 class WebViewExample extends StatefulWidget {
   final String title;
@@ -150,7 +149,7 @@ class _WebViewExampleState extends State<WebViewExample> {
     );
 
     // Open the generated PDF
-    OpenFile.open(file.path);
+    // OpenFile.open(file.path);
   }
 
   Future<bool> _requestPermission() async {

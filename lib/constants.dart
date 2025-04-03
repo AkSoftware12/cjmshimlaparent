@@ -21,17 +21,31 @@ class AppAssets {
   static const String logo = 'assets/images/logo.png'; 
   static const String cjm = 'assets/cjm.png';
   static const String cjmlogo = 'assets/playstore.png';
+  static const String changePawword = 'assets/changepassword.png';
   // static const String cjmlogo2 = 'assets/playstore2.png';
 }
 
 class ApiRoutes {
-  static const String baseUrl = "https://softcjm.cjmshimla.in/api";
 
+// Gallery App url
   static const String baseUrl2 = "https://webcjm.cjmshimla.in/api";
-  // static const String baseUrl = "http://192.168.1.2/cjm_shimla/api";
+
+  // Main App Url
+  // static const String baseUrl = "https://apicjm.cjmshimla.in/api";
+  static const String baseUrl = "https://testapi.cjmshimla.in/api";
+  // static const String baseUrl = "https://softcjm.cjmshimla.in/api";
+
+
+
+
+
+  // Local App url
+
+  // static const String baseUrl = "http://192.168.1.8/cjm_shimla/api";
 
 
   static const String login = "$baseUrl/login";
+  static const String loginstudent = "$baseUrl/loginstudent";
   static const String clear = "$baseUrl/clear";
   static const String getProfile = "$baseUrl/student-get";
   static const String getPhotos = "$baseUrl2/getPhotos";
@@ -51,4 +65,8 @@ class ApiRoutes {
   static const String getBookCategories = "$baseUrl/book-categories";
   static const String getBookPublishers = "$baseUrl/book-publishers";
   static const String getBookSupplier= "$baseUrl/book-supplier";
+  static const String getAtomSettings= "$baseUrl/atom-settings";
+  static const String orderCreate= "$baseUrl/bulkpay";
+  static const String atompay= "$baseUrl/atompay";
+  static const String passwordChange= "$baseUrl/change-password";
 }

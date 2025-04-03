@@ -100,10 +100,10 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
           iconTheme: IconThemeData(color: AppColors.textwhite),
           backgroundColor: AppColors.secondary,
           title: Text(
-            'Assignments',
+            'Home Work',
             style: GoogleFonts.montserrat(
               textStyle: Theme.of(context).textTheme.displayLarge,
-              fontSize: 20,
+              fontSize: 15.sp,
               fontWeight: FontWeight.w600,
               fontStyle: FontStyle.normal,
               color: AppColors.textwhite,
@@ -120,11 +120,11 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
         itemCount: assignments.length,
         itemBuilder: (context, index) {
           final assignment = assignments[index];
-          String description = html_parser.parse(assignment['description']).body?.text ?? '';
+          String description = html_parser.parse(assignment['description']?? '').body?.text ?? '';
           String startDate = DateFormat('dd-MM-yyyy')
-              .format(DateTime.parse(assignment['start_date']));
+              .format(DateTime.parse(assignment['start_date']??''));
           String endDate = DateFormat('dd-MM-yyyy')
-              .format(DateTime.parse(assignment['due_date']));
+              .format(DateTime.parse(assignment['due_date']??''));
 
           return Card(
             margin: EdgeInsets.symmetric(
@@ -134,10 +134,10 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
             // Light background
             shadowColor: Colors.black26,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(10.sp),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding:  EdgeInsets.all(10.sp),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -169,9 +169,7 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
                           CrossAxisAlignment.start,
                           children: [
                             Text(
-                              assignment['title']
-                                  .toString()
-                                  .toUpperCase(),
+                              assignment['title'].toString().toUpperCase(),
                               style: GoogleFonts.montserrat(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
@@ -191,27 +189,6 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
                           ],
                         ),
                       ),
-                    ],
-                  ),
-
-                  SizedBox(height: 10),
-
-                  /// **Dates**
-                  Row(
-                    mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildDateInfo('Start', startDate),
-                      _buildDateInfo('Due', endDate),
-                    ],
-                  ),
-
-                  SizedBox(height: 10.sp),
-
-                  Row(
-                    mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
-                    children: [
                       _buildButton(
                         text: 'View',
                         color: Colors.blueAccent,
@@ -230,26 +207,64 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
                         //   }
                         // },
                       ),
-                      _buildButton(
-                        text: 'Upload',
-                        color: Colors.orange,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  AssignmentUploadScreen(
-                                    onReturn: () {},
-                                    id: assignment['id'].toString(),
-                                  ),
-                            ),
-                          );
-                        },
-                      ),
-                      _buildStatusBox(
-                          assignment['attendance_status']),
                     ],
                   ),
+
+                  SizedBox(height: 10),
+
+                  /// **Dates**
+                  // Row(
+                  //   mainAxisAlignment:
+                  //   MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     _buildDateInfo('Start', startDate),
+                  //     _buildDateInfo('Due', endDate),
+                  //   ],
+                  // ),
+
+                  SizedBox(height: 10.sp),
+
+                  // Row(
+                  //   mainAxisAlignment:
+                  //   MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     _buildButton(
+                  //       text: 'View',
+                  //       color: Colors.blueAccent,
+                  //       onTap: () async {
+                  //         // final Uri pdfUri = Uri.parse(assignment['attach'].toString());
+                  //         FileOpener.openFile(assignment['attach'].toString());
+                  //       },
+                  //       // onTap: () async {
+                  //       //   final Uri pdfUri = Uri.parse(assignment['attach'].toString());
+                  //       //   if (await canLaunchUrl(pdfUri)) {
+                  //       //     await launchUrl(pdfUri,
+                  //       //         mode: LaunchMode
+                  //       //             .externalApplication);
+                  //       //   } else {
+                  //       //     print("Could not launch $pdfUri");
+                  //       //   }
+                  //       // },
+                  //     ),
+                  //     // _buildButton(
+                  //     //   text: 'Upload',
+                  //     //   color: Colors.orange,
+                  //     //   onTap: () {
+                  //     //     Navigator.push(
+                  //     //       context,
+                  //     //       MaterialPageRoute(
+                  //     //         builder: (context) =>
+                  //     //             AssignmentUploadScreen(
+                  //     //               onReturn: () {},
+                  //     //               id: assignment['id'].toString(),
+                  //     //             ),
+                  //     //       ),
+                  //     //     );
+                  //     //   },
+                  //     // ),
+                  //     // _buildStatusBox(assignment['attendance_status']),
+                  //   ],
+                  // ),
                 ],
               ),
             ),
@@ -292,17 +307,17 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 100,
+        // width: MediaQuery.of(context).size.width*0.85,
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(10),
         ),
-        padding: EdgeInsets.symmetric(vertical: 10),
+        padding: EdgeInsets.symmetric(vertical: 10.sp, horizontal: 10.sp),
         child: Center(
           child: Text(
             text.toUpperCase(),
             style: GoogleFonts.montserrat(
-              fontSize: 13,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
               color: Colors.white,
             ),

@@ -207,38 +207,33 @@ class _AttendanceTableScreenState extends State<AttendanceScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
 
-        Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color:Colors.blue.withOpacity(0.2),
-              blurRadius: 8,
-              spreadRadius: 2,
-              offset: const Offset(0, 1),
-            ),
-          ],
-        ),
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            DateRangeSelector(
-              startDate: startDate,
-              endDate: endDate,
-              onSelectDateRange: _selectDateRange,
-            ),
+      //   Container(
+      //   padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      //   decoration: BoxDecoration(
+      //     color: Colors.white,
+      //     borderRadius: BorderRadius.circular(12),
+      //     boxShadow: [
+      //       BoxShadow(
+      //         color:Colors.blue.withOpacity(0.2),
+      //         blurRadius: 8,
+      //         spreadRadius: 2,
+      //         offset: const Offset(0, 1),
+      //       ),
+      //     ],
+      //   ),
+      //   child: Column(
+      //     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //     children: [
+      //       DateRangeSelector(
+      //         startDate: startDate,
+      //         endDate: endDate,
+      //         onSelectDateRange: _selectDateRange,
+      //       ),
+      //
+      //     ],
+      //   ),
+      // ),
 
-          ],
-        ),
-      ),
-            // Date Selection Row
-            // DateRangeSelector(
-            //   startDate: startDate,
-            //   endDate: endDate,
-            //   onSelectDateRange: _selectDateRange,
-            // ),
             SizedBox(height: 10,),
             // _buildAppBar('Attendance $selectedYear $selectedMonth'),
             FutureBuilder<Map<String, dynamic>>(
@@ -480,10 +475,10 @@ class _AttendanceTableScreenState extends State<AttendanceScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text("Select Date Range",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              SizedBox(height: 10),
+                  style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.bold)),
+              SizedBox(height: 7.sp),
               SizedBox(
-                height: 300,
+                height: 250.sp,
                 child: SfDateRangePicker(
                   selectionMode: DateRangePickerSelectionMode.range,
                   onSelectionChanged:
@@ -499,7 +494,7 @@ class _AttendanceTableScreenState extends State<AttendanceScreen> {
                   },
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 7.sp),
               ElevatedButton.icon(
                 onPressed: () {
                   if (startDate == null || endDate == null) {
@@ -521,7 +516,7 @@ class _AttendanceTableScreenState extends State<AttendanceScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blueAccent,
                   foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  padding: EdgeInsets.symmetric(horizontal: 15.sp, vertical: 8.sp),
                 ),
               ),
 
@@ -576,7 +571,7 @@ class DateRangeSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      padding:  EdgeInsets.symmetric(vertical: 9.sp, horizontal: 12.sp),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -598,12 +593,12 @@ class DateRangeSelector extends StatelessWidget {
               OutlinedButton.icon(
                 onPressed: () => onSelectDateRange(context),
                 icon: const Icon(Icons.calendar_today, color: Colors.blueAccent),
-                label: const Text(
-                  "Select Date Range",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                label:  Text(
+                  "Select Date ",
+                  style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w500),
                 ),
                 style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding:  EdgeInsets.symmetric(horizontal: 12.sp, vertical: 10.sp),
                   side: const BorderSide(color: Colors.blueAccent),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -612,10 +607,10 @@ class DateRangeSelector extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(width: 16), // Spacing between button and container
+           SizedBox(width: 12.sp), // Spacing between button and container
           Expanded(
             child: Container(
-              padding: const EdgeInsets.all(14),
+              padding:  EdgeInsets.all(10.sp),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
@@ -625,7 +620,7 @@ class DateRangeSelector extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildDateRow("From:", startDate),
-                  const Divider(height: 10, color: Colors.blueAccent),
+                   Divider(height: 10.sp, color: Colors.blueAccent),
                   _buildDateRow("To:", endDate),
                 ],
               ),
@@ -642,16 +637,16 @@ class DateRangeSelector extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 16,
+          style:  TextStyle(
+            fontSize: 12.sp,
             fontWeight: FontWeight.bold,
             color: Colors.blueGrey,
           ),
         ),
         Text(
           date != null ? DateFormat('dd-MM-yyyy').format(date) : "Select Date",
-          style: const TextStyle(
-            fontSize: 16,
+          style:  TextStyle(
+            fontSize: 14.sp,
             color: Colors.black87,
             fontWeight: FontWeight.bold,
           ),

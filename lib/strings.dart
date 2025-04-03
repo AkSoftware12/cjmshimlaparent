@@ -6,9 +6,12 @@ class AppStrings {
   static const loginFailedMessage = 'Unexpected error occurred. Please try again.';
   static const unexpectedError = 'An unexpected error occurred. Please try again.';
   static const login = 'Login';
-  static const email = 'Email';
+  static const changePassword = 'Password Change';
+  static const email = 'Email, Phone Number, or Admission Number';
   static const invalidEmail = 'Invalid email address';
   static const password = 'Password';
+  static const newPassword = 'New Password';
+  static const confirmPassword = 'Confirm Password';
   static const passwordRequired = 'Password is required';
   static const rememberMe = 'Remember Me';
   static const studentLogin = 'Student Login';

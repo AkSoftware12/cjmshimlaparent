@@ -1,6 +1,9 @@
+import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../UI/Dashboard/HomeScreen%20.dart';
@@ -12,6 +15,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'Auth/login_screen.dart';
+import 'Auth/login_student.dart';
 import 'FAQ/faq.dart';
 import 'Fees/FeesScreen.dart';
 import 'Fees/fee_demo.dart';
@@ -28,7 +32,7 @@ import 'WebView/webview.dart';
 class BottomNavBarScreen extends StatefulWidget {
   // final String token;
   final int initialIndex;
-  const BottomNavBarScreen({super.key, required this.initialIndex});
+  const BottomNavBarScreen({super.key, required this.initialIndex,});
   @override
   _BottomNavBarScreenState createState() => _BottomNavBarScreenState();
 }
@@ -37,7 +41,11 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
   int _selectedIndex = 0;
   Map<String, dynamic>? studentData;
   bool isLoading = true;
-
+  List<dynamic> studentList = []; // ✅ Dropdown ke liye data list
+  String? selectedStudent; // ✅ Selected student ka value
+  String? selectedOption;
+  final Dio _dio = Dio(); // Initialize Dio
+  bool _isLoading = false;
   // List of screens
   final List<Widget> _screens = [
     HomeScreen(),
@@ -66,9 +74,11 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
   @override
   void initState() {
     super.initState();
-
     fetchStudentData();
+
     _selectedIndex = widget.initialIndex; // Set the initial tab index
+
+
 
   }
   Future<void> fetchStudentData() async {
@@ -99,6 +109,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
     }
   }
 
+
   void _showLoginDialog() {
     showCupertinoDialog(
       context: context,
@@ -120,6 +131,8 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
       ),
     );
   }
+
+
   Widget _buildAppBar() {
     return Row(
       children: [
@@ -132,8 +145,8 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                   Scaffold.of(context).openDrawer();
                 },
               child: SizedBox(
-                height: 30,
-                width: 30,
+                height: MediaQuery.of(context).size.width*0.1,
+                width: MediaQuery.of(context).size.width*0.08,
                 child: Image.asset('assets/menu.png'),
               ),
             ),
@@ -141,7 +154,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
         ),
 
 
-         SizedBox(width: 16),
+         SizedBox(width: 12.sp),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -149,30 +162,67 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
               'Welcome !',
               style: GoogleFonts.montserrat(
                 textStyle: Theme.of(context).textTheme.displayLarge,
-                fontSize: 13,
+                fontSize: 11.sp,
                 fontWeight: FontWeight.w600,
                 fontStyle: FontStyle.normal,
                 color: AppColors.textwhite,
               ),
             ),
-            Text(
-              studentData?['student_name'] ?? 'Student', // Fallback to 'Student' if null
-              style: GoogleFonts.montserrat(
-                textStyle: Theme.of(context).textTheme.displayLarge,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                fontStyle: FontStyle.normal,
-                color: AppColors.textwhite,
+
+            GestureDetector(
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginStudentPage(pass: '',),
+                  ),
+                );
+              },
+              child: Row(
+                children: [
+                  Text(
+                    '${studentData?['student_name'].toString()}',
+                    style: GoogleFonts.montserrat(
+                      textStyle: Theme.of(context).textTheme.displayLarge,
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.w600,
+                      fontStyle: FontStyle.normal,
+                      color: AppColors.textwhite,
+                    ),
+                  ),
+                  Icon(Icons.arrow_drop_down, color: Colors.white),
+                ],
               ),
             ),
+
+
+
           ],
         ),
       ],
     );
   }
 
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text(AppStrings.loginFailedTitle),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: AppColors.secondary,
       drawerEnableOpenDragGesture: false,
@@ -192,7 +242,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.all(15.0),
+            padding:  EdgeInsets.all(12.sp),
             child: GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -206,7 +256,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                 },
                 child: Icon(
                   Icons.notification_add,
-                  size: 26,
+                  size: 20.sp,
                   color: Colors.white,
                 )),
           )
@@ -226,27 +276,27 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
           type: BottomNavigationBarType.fixed,
         items:  <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.home),
+            icon: Icon(CupertinoIcons.home,size: 20.sp,),
             label: AppStrings.homeLabel,
             backgroundColor: AppColors.primary,
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.clock),
+            icon: Icon(CupertinoIcons.clock,size: 20.sp,),
             label: AppStrings.attendanceLabel,
             backgroundColor: AppColors.primary,
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.book_fill),
+            icon: Icon(CupertinoIcons.book_fill,size: 20.sp,),
             label: AppStrings.libraryLabel,
             backgroundColor: AppColors.primary,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.currency_rupee),
+            icon: Icon(Icons.currency_rupee,size: 20.sp,),
             label: AppStrings.feesLabel,
             backgroundColor: AppColors.primary,
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.person_alt_circle_fill),
+            icon: Icon(CupertinoIcons.person_alt_circle_fill,size: 20.sp,),
             label: AppStrings.profileLabel,
             backgroundColor: AppColors.primary,
           ),
@@ -416,7 +466,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
 
                           ListTile(
                             title: Text(
-                              'Assignments',
+                              'Home Work',
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
                                     color: Colors.white,
@@ -884,4 +934,6 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
     );
   }
 }
+
+
 

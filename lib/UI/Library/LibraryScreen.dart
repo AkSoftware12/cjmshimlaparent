@@ -226,28 +226,6 @@ class _LibraryScreenState extends State<LibraryScreen> {
     }
   }
 
-  void _showLoginDialog() {
-    showCupertinoDialog(
-      context: context,
-      builder: (ctx) =>
-          CupertinoAlertDialog(
-            title: const Text('Session Expired'),
-            content: const Text('Please log in again to continue.'),
-            actions: [
-              CupertinoDialogAction(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(ctx).pop();
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
-                  );
-                },
-              ),
-            ],
-          ),
-    );
-  }
 
   void _refresh(String type, String cat, int publishers, int? supplier) {
     setState(() {
@@ -395,7 +373,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                                 hint: Text(
                                   "Select Type",
                                   style: TextStyle(
-                                      fontSize: 13.sp,
+                                      fontSize: 12.sp,
                                       color: Colors.black87,
                                       fontWeight: FontWeight.w500),
                                 ),
@@ -452,7 +430,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                                 hint: Text(
                                   "Select Category",
                                   style: TextStyle(
-                                      fontSize: 13.sp,
+                                      fontSize: 12.sp,
                                       color: Colors.black87,
                                       fontWeight: FontWeight.w500),
                                 ),
@@ -502,7 +480,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                           'Select Publishers',
                           maxLines: 1,
                           style: TextStyle(
-                              fontSize: 13.sp,
+                              fontSize: 12.sp,
                               color: Colors.black87,
                               fontWeight: FontWeight.w500),
                         ),
@@ -547,7 +525,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                         hintText: Text(
                           'Select Supplier',
                           style: TextStyle(
-                              fontSize: 13.sp,
+                              fontSize: 12.sp,
                               color: Colors.black87,
                               fontWeight: FontWeight.w500),
                         ),
@@ -649,14 +627,14 @@ class _LibraryScreenState extends State<LibraryScreen> {
                       border: InputBorder.none,
                       prefixIcon: Icon(
                         Icons.search,
-                        size: 21.sp,
+                        size: 20.sp,
                         color: Colors.black,
                       ),
                       suffixIcon: textController.text.isNotEmpty
                           ? IconButton(
                         icon: Icon(
                           Icons.clear,
-                          size: 23.sp,
+                          size: 20.sp,
                           color: Colors.black,
                         ),
                         onPressed: () {

@@ -107,10 +107,7 @@ class _FeesScreenState extends State<FeesDemoScreen> {
     final token = prefs.getString('token');
     print("token: $token");
 
-    if (token == null) {
-      _showLoginDialog();
-      return;
-    }
+
 
     final response = await http.get(
       Uri.parse(ApiRoutes.getAtomSettings),
@@ -141,10 +138,7 @@ class _FeesScreenState extends State<FeesDemoScreen> {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
 
-    if (token == null) {
-      _showLoginDialog();
-      return;
-    }
+
 
     final response = await http.get(
       Uri.parse(ApiRoutes.getFees),
@@ -159,34 +153,12 @@ class _FeesScreenState extends State<FeesDemoScreen> {
         isLoading = false;
       });
     } else {
-      _showLoginDialog();
       setState(() {
         isLoading = false;
       });
     }
   }
 
-  void _showLoginDialog() {
-    showCupertinoDialog(
-      context: context,
-      builder: (ctx) => CupertinoAlertDialog(
-        title: const Text('Session Expired'),
-        content: const Text('Please log in again to continue.'),
-        actions: [
-          CupertinoDialogAction(
-            child: const Text('OK'),
-            onPressed: () {
-              Navigator.of(ctx).pop();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginPage()),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
 
   void _toggleSelection(int id, double amount) {
     setState(() {
@@ -206,7 +178,6 @@ class _FeesScreenState extends State<FeesDemoScreen> {
     print("Token: $token");
 
     if (token == null) {
-      _showLoginDialog();
       return;
     }
 
@@ -223,7 +194,6 @@ class _FeesScreenState extends State<FeesDemoScreen> {
         print(studentData);
       });
     } else {
-      _showLoginDialog();
     }
   }
 
@@ -362,7 +332,7 @@ class _FeesScreenState extends State<FeesDemoScreen> {
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.green,
-                              padding: EdgeInsets.symmetric(vertical: 12),
+                              padding: EdgeInsets.symmetric(vertical: 10.sp),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -370,7 +340,7 @@ class _FeesScreenState extends State<FeesDemoScreen> {
                             child: Text(
                               '${'Pay'} ${'₹'} ${totalAmount.toString()}',
                               style: GoogleFonts.montserrat(
-                                fontSize: 16,
+                                fontSize: 13.sp,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white,
                               ),
@@ -515,9 +485,9 @@ class _FeesScreenState extends State<FeesDemoScreen> {
         return AlertDialog(
           content: Column(
             mainAxisSize: MainAxisSize.min,
-            children: const [
+            children:  [
               CircularProgressIndicator(),
-              SizedBox(height: 20),
+              SizedBox(height: 15.sp),
               Text("Please wait...")
             ],
           ),
@@ -580,7 +550,7 @@ class PaymentCard extends StatelessWidget {
                       '${month.substring(0, 3).toUpperCase()}',
                       style: TextStyle(
                           fontWeight: FontWeight.w700,
-                          fontSize: 13.sp), // Optional styling
+                          fontSize: 12.sp), // Optional styling
                     ),
                     Text(
                       status.toLowerCase() == 'paid' ? 'Paid' : 'Due',
@@ -605,7 +575,7 @@ class PaymentCard extends StatelessWidget {
             Text(
               "₹$amount",
               style: GoogleFonts.montserrat(
-                fontSize: 18,
+                fontSize: 15.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),

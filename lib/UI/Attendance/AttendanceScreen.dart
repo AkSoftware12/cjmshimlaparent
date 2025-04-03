@@ -79,12 +79,12 @@ class _AttendanceTableScreenState extends State<AttendanceScreen> {
         Align(
           alignment: Alignment.bottomRight,
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding:  EdgeInsets.all(8.sp),
             child: Text(
               title,
               style: GoogleFonts.montserrat(
                 textStyle: Theme.of(context).textTheme.displayLarge,
-                fontSize: 21,
+                fontSize: 15.sp,
                 fontWeight: FontWeight.w800,
                 fontStyle: FontStyle.normal,
                 color: AppColors.textwhite,
@@ -104,12 +104,12 @@ class _AttendanceTableScreenState extends State<AttendanceScreen> {
 
                 // Month Dropdown
                 Container(
-                  height: 30,
+                  height: 25.sp,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.white),
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0, right: 8),
+                    padding:  EdgeInsets.only(left: 8.sp, right: 8.sp),
                     child: DropdownButton<int>(
                       value: selectedMonth,
                       onChanged: (int? newMonth) {
@@ -139,8 +139,7 @@ class _AttendanceTableScreenState extends State<AttendanceScreen> {
                         ];
                         return DropdownMenuItem<int>(
                           value: month,
-                          child: Text(monthNames[month -
-                              1]), // Display the abbreviated month name
+                          child: Text(monthNames[month - 1]), // Display the abbreviated month name
                         );
                       }),
                       underline:
@@ -148,16 +147,16 @@ class _AttendanceTableScreenState extends State<AttendanceScreen> {
                     ),
                   ),
                 ),
-                SizedBox(width: 10),
+                SizedBox(width: 10.sp),
                 // To add space between year and month dropdown
 
                 Container(
-                  height: 30,
+                  height: 25.sp,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.white),
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0, right: 8),
+                    padding:  EdgeInsets.only(left: 8.sp, right: 8.sp),
                     child: DropdownButton<int>(
                       value: selectedYear,
                       onChanged: (int? newYear) {
@@ -234,7 +233,7 @@ class _AttendanceTableScreenState extends State<AttendanceScreen> {
       //   ),
       // ),
 
-            SizedBox(height: 10,),
+            SizedBox(height: 7.sp,),
             // _buildAppBar('Attendance $selectedYear $selectedMonth'),
             FutureBuilder<Map<String, dynamic>>(
               future: _attendanceFuture,
@@ -253,7 +252,7 @@ class _AttendanceTableScreenState extends State<AttendanceScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset('assets/no_attendance.png', filterQuality: FilterQuality.high,height: 150.sp,width: 200.sp,),
-                          SizedBox(height: 10),
+                          SizedBox(height: 8.sp),
                           Text(
                             'Attendance Not Available.',
                             style: GoogleFonts.montserrat(
@@ -385,8 +384,8 @@ class _AttendanceTableScreenState extends State<AttendanceScreen> {
           headingRowColor: MaterialStateColor.resolveWith((states) => Colors.blue.shade100),
           border: TableBorder.all(color: Colors.grey.shade300),
           columns: [
-            DataColumn(label: Text("Date", style: TextStyle(fontWeight: FontWeight.bold))),
-            DataColumn(label: Text("Attendance", style: TextStyle(fontWeight: FontWeight.bold))),
+            DataColumn(label: Text("Date", style: TextStyle(fontWeight: FontWeight.w700,fontSize: 13.sp))),
+            DataColumn(label: Text("Attendance", style: TextStyle(fontWeight: FontWeight.w700,fontSize: 13.sp))),
           ],
           rows: [
             // **Attendance Records**
@@ -394,13 +393,13 @@ class _AttendanceTableScreenState extends State<AttendanceScreen> {
               String status = attendanceData[0]['dailyRecords'][date] ?? '-';
               return DataRow(
                 cells: [
-                  DataCell(Text(date, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold,color: Colors.white))),
+                  DataCell(Text(date, style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold,color: Colors.white))),
                   DataCell(
                     Center(
                       child: Text(
                         status,
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 12.sp,
                           fontWeight: FontWeight.bold,
                           color: _getStatusColor(status),
                         ),
@@ -427,12 +426,12 @@ class _AttendanceTableScreenState extends State<AttendanceScreen> {
   DataRow _buildSummaryRow(String title, String value, Color color) {
     return DataRow(
       cells: [
-        DataCell(Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14,color: Colors.white))),
+        DataCell(Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12.sp,color: Colors.white))),
         DataCell(
           Center(
             child: Text(
               value,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: color),
+              style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: color),
             ),
           ),
         ),

@@ -32,10 +32,12 @@ class ApiRoutes {
 
   // Main App Url
   // static const String baseUrl = "https://apicjm.cjmshimla.in/api";
-  // static const String baseUrl = "https://testapi.cjmshimla.in/api";
 
 
-  // static const String downloadUrl = "https://testapi.cjmshimla.in/student/fee-receipt/";
+  static const String baseUrl = "https://testapi.cjmshimla.in/api";
+
+
+  static const String downloadUrl = "https://testapi.cjmshimla.in/student/fee-receipt/";
 
 
 
@@ -43,8 +45,8 @@ class ApiRoutes {
 
   // Local App url
 
-  static const String baseUrl = "http://192.168.1.3/cjm_shimla/api";
-  static const String downloadUrl = "http://192.168.1.3/cjm_shimla/student/fee-receipt/";
+  // static const String baseUrl = "http://192.168.1.3/cjm_shimla/api";
+  // static const String downloadUrl = "http://192.168.1.3/cjm_shimla/student/fee-receipt/";
 
 
   static const String login = "$baseUrl/login";

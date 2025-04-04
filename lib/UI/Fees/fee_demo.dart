@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -28,7 +30,15 @@ class FeesDemoScreen extends StatefulWidget {
 }
 
 class _FeesScreenState extends State<FeesDemoScreen> {
-   String createOrderId = ""; //optional
+  String createOrderId = ""; //optional
+  String productId = ""; //optional
+
+  bool isButtonDisabled = false;
+  Timer? _timer;
+  int remainingSeconds = 0;
+
+  static const String disableTimeKey = 'pay_button_disabled_time';
+  static const int cooldownMinutes = 10;
 
   // merchant configuration data
   final String login = "317157"; //mandatory
@@ -38,7 +48,8 @@ class _FeesScreenState extends State<FeesDemoScreen> {
   final String responseHashKey = 'd0b70f551f424ecc57'; //mandatory
   // final String requestEncryptionKey = 'A4476C2062FFA58980DC8F79EB6A799E'; //mandatory
   // final String responseDecryptionKey = '75AEF0FA1B94B3C10D4F5B268F757F11'; //mandatory
-  final String txnid = 'test240223'; // mandatory // this should be unique each time
+  final String txnid =
+      'test240223'; // mandatory // this should be unique each time
   final String clientcode = "NAVIN"; //mandatory
   final String txncurr = "INR"; //mandatory
   final String mccCode = "8220"; //mandatory
@@ -80,34 +91,36 @@ class _FeesScreenState extends State<FeesDemoScreen> {
   double totalAmount = 0.0;
   List<String> selectedFees1 = [];
 
-  List<String> months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
-  ];
+  Timer? _statusCheckTimer; // Timer for checking fee status
+
+  // List<String> months = [
+  //   "April",
+  //   "April",
+  //   "May",
+  //   "June",
+  //   "July",
+  //   "August",
+  //   "September",
+  //   "October",
+  //   "November",
+  //   "December",
+  //   "January",
+  //   "February",
+  //   "March",
+  // ];
 
   @override
   void initState() {
     super.initState();
     fetchAtomDataKey();
     fetchFeesData();
+    checkCooldownStatus();
   }
 
   Future<void> fetchAtomDataKey() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
     print("token: $token");
-
-
 
     final response = await http.get(
       Uri.parse(ApiRoutes.getAtomSettings),
@@ -129,16 +142,12 @@ class _FeesScreenState extends State<FeesDemoScreen> {
     }
   }
 
-
-
-   Future<void> fetchFeesData() async {
+  Future<void> fetchFeesData() async {
     setState(() {
       isLoading = true;
     });
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
-
-
 
     final response = await http.get(
       Uri.parse(ApiRoutes.getFees),
@@ -158,7 +167,6 @@ class _FeesScreenState extends State<FeesDemoScreen> {
       });
     }
   }
-
 
   void _toggleSelection(int id, double amount) {
     setState(() {
@@ -193,8 +201,7 @@ class _FeesScreenState extends State<FeesDemoScreen> {
         isLoading = false;
         print(studentData);
       });
-    } else {
-    }
+    } else {}
   }
 
   Future<void> orderCreate(BuildContext context) async {
@@ -224,11 +231,13 @@ class _FeesScreenState extends State<FeesDemoScreen> {
 
         setState(() {
           createOrderId = data["order_id"]; // ✅ Correct assignment
+          productId = data["product_id"]; // ✅ Correct assignment
           print('OrderId: $createOrderId');
-          // orderCreateApi(context);
-
+          print('productId: $productId');
         });
-        _initNdpsPayment(context, responseHashKey, atomData!['decResponseKey'].toString());
+        _initNdpsPayment(
+            context, responseHashKey, atomData!['decResponseKey'].toString());
+        startStatusCheck(); // Start checking status after payment initiation
       } else {
         print("Failed: ${response.statusCode}, Response: ${response.body}");
       }
@@ -237,55 +246,227 @@ class _FeesScreenState extends State<FeesDemoScreen> {
     }
   }
 
-   Future<void> orderCreateApi(BuildContext context) async {
-     final prefs = await SharedPreferences.getInstance();
-     final token = prefs.getString('token');
-     print("Token: $token");
+  Future<void> orderCreateApi(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    print("Token: $token");
 
-     final url = Uri.parse(ApiRoutes.atompay);
+    final url = Uri.parse(ApiRoutes.atompay);
 
-     Map<String, dynamic> body = {
-       "fee_ids": selectedFees1 ?? [],
-       "order_id": createOrderId,
-     };
+    Map<String, dynamic> body = {
+      "fee_ids": selectedFees1 ?? [],
+      "order_id": createOrderId,
+    };
 
-     try {
-       final response = await http.post(
-         url,
-         headers: {
-           "Content-Type": "application/json",
-           "Authorization": "Bearer $token", // Adding token here
-         },
-         body: jsonEncode(body),
-       );
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token", // Adding token here
+        },
+        body: jsonEncode(body),
+      );
 
-       if (response.statusCode == 200) {
-         print("Success: ${response.body}");
+      if (response.statusCode == 200) {
+        print("Success: ${response.body}");
 
-         Map<String, dynamic> data = jsonDecode(response.body);
+        Map<String, dynamic> data = jsonDecode(response.body);
+        _showPaymentSuccessDialog(context);
+        fetchFeesData();
 
-         setState(() {
-           print('Susses: $data');
-         });
-         // _initNdpsPayment(context, responseHashKey, atomData!['decResponseKey'].toString());
-       } else {
-         print("Failed: ${response.statusCode}, Response: ${response.body}");
-       }
-     } catch (e) {
-       print("Error: $e");
-     }
-   }
+        setState(() {
+          print('Susses: $data');
+        });
+      } else {
+        print("Failed: ${response.statusCode}, Response: ${response.body}");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
 
-   void _refresh() {
-     setState(() {
-       fetchFeesData();
-       // orderCreateApi(context);
-     });
-   }
+  void _refresh() {
+    setState(() {
+      orderCreateApi(context);
+    });
+  }
 
+  void _showPaymentSuccessDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          title: Text(
+            'Payment Successful',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.check_circle,
+                  color: Colors.green,
+                  size: 60,
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Your payment has been processed successfully!',
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
+  void startCooldown() async {
+    final prefs = await SharedPreferences.getInstance();
+    final currentTime = DateTime.now().millisecondsSinceEpoch;
+    await prefs.setInt(disableTimeKey, currentTime);
 
-   @override
+    setState(() {
+      isButtonDisabled = true;
+      remainingSeconds = cooldownMinutes * 60;
+    });
+
+    startTimer();
+  }
+
+  void startTimer() async {
+    _timer?.cancel();
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) async {
+      setState(() {
+        remainingSeconds--;
+      });
+
+      if (remainingSeconds <= 0) {
+        _timer?.cancel();
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.remove(disableTimeKey);
+        setState(() {
+          isButtonDisabled = false;
+        });
+      }
+    });
+  }
+
+  void checkCooldownStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final disabledAt = prefs.getInt(disableTimeKey);
+
+    if (disabledAt != null) {
+      final now = DateTime.now().millisecondsSinceEpoch;
+      final diff = now - disabledAt;
+      final elapsedSeconds = diff ~/ 1000;
+      final totalCooldown = cooldownMinutes * 60;
+
+      if (elapsedSeconds < totalCooldown) {
+        setState(() {
+          isButtonDisabled = true;
+          remainingSeconds = totalCooldown - elapsedSeconds;
+        });
+        startTimer();
+      } else {
+        await prefs.remove(disableTimeKey);
+      }
+    }
+  }
+
+  String formatDuration(int seconds) {
+    final minutes = (seconds ~/ 60).toString().padLeft(2, '0');
+    final secs = (seconds % 60).toString().padLeft(2, '0');
+    return "$minutes:$secs";
+  }
+
+  // Start the periodic status check when payment is initiated
+  void startStatusCheck() {
+    _statusCheckTimer?.cancel(); // Cancel any existing timer
+    _statusCheckTimer = Timer.periodic(Duration(seconds: 10), (timer) {
+      checkFeeStatus();
+    });
+  }
+
+  // Check the status of selected fees
+  Future<void> checkFeeStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null || selectedFees1.isEmpty) {
+      _statusCheckTimer?.cancel(); // Stop timer if no token or no selected fees
+      return;
+    }
+
+    final response = await http.get(
+      Uri.parse(ApiRoutes.getFees), // Assuming this endpoint returns fee data
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      List updatedFees = data['fees'];
+
+      // Check if all selected fees are paid
+      bool allPaid = selectedFees1.every((feeId) {
+        var fee = updatedFees.firstWhere(
+          (f) => f['id'].toString() == feeId,
+          orElse: () => null,
+        );
+        return fee != null && fee['pay_status'].toLowerCase() == 'paid';
+      });
+
+      if (allPaid) {
+        setState(() {
+          fees = updatedFees; // Update the fees list
+          selectedFees1.clear(); // Clear selected fees
+          totalAmount = 0.0; // Reset total amount
+        });
+        _statusCheckTimer?.cancel(); // Stop the timer
+        // _showPaymentSuccessDialog(context); // Show success dialog
+      } else {
+        setState(() {
+          fees = updatedFees; // Update UI with latest fee data
+        });
+      }
+    } else {
+      print("Failed to fetch fee status: ${response.statusCode}");
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _statusCheckTimer?.cancel(); // Cancel the status check timer
+    super.dispose();
+  }
+
+  void _showCooldownDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      // Allow dialog to be dismissed by tapping outside
+      builder: (BuildContext context) {
+        return _CooldownDialog(remainingSeconds: remainingSeconds);
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.secondary,
@@ -299,6 +480,17 @@ class _FeesScreenState extends State<FeesDemoScreen> {
                       child: ListView.builder(
                         itemCount: fees.length,
                         itemBuilder: (context, index) {
+                          String dueDate = fees[index]['due_date'].toString();
+
+                          // Parse due date and extract month
+                          String monthName = "";
+                          if (dueDate.isNotEmpty) {
+                            DateTime parsedDate = DateTime.parse(dueDate);
+                            monthName = DateFormat('MMMM')
+                                .format(parsedDate); // Extract month name
+                            print("Due Date Month: $monthName"); // Print month
+                          }
+
                           return PaymentCard(
                             amount: fees[index]['to_pay_amount'].toString(),
                             status: fees[index]['pay_status'],
@@ -314,7 +506,7 @@ class _FeesScreenState extends State<FeesDemoScreen> {
                                       fees[index]['to_pay_amount'].toString()));
                               print(selectedFees1);
                             },
-                            month: months[index],
+                            month: monthName,
                           );
                         },
                       ),
@@ -326,9 +518,15 @@ class _FeesScreenState extends State<FeesDemoScreen> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: ElevatedButton(
-                            // onPressed: () => _initNdpsPayment(context, responseHashKey, responseDecryptionKey),
                             onPressed: () {
-                              orderCreate(context);
+                              if (isButtonDisabled) {
+                                // Show dialog when timer is running
+                                _showCooldownDialog(context);
+                              } else {
+                                // Proceed with payment when timer is not running
+                                orderCreate(context);
+                                startCooldown();
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.green,
@@ -338,7 +536,9 @@ class _FeesScreenState extends State<FeesDemoScreen> {
                               ),
                             ),
                             child: Text(
-                              '${'Pay'} ${'₹'} ${totalAmount.toString()}',
+                              isButtonDisabled
+                                  ? 'Please wait (${formatDuration(remainingSeconds)})'
+                                  : 'Pay ₹ ${totalAmount.toString()}',
                               style: GoogleFonts.montserrat(
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.w600,
@@ -353,8 +553,8 @@ class _FeesScreenState extends State<FeesDemoScreen> {
     );
   }
 
-
-  void _initNdpsPayment(BuildContext context, String responseHashKey, String responseDecryptionKey) {
+  void _initNdpsPayment(BuildContext context, String responseHashKey,
+      String responseDecryptionKey) {
     showLoadingDialog(context);
     _getEncryptedPayUrl(context, responseHashKey, responseDecryptionKey);
   }
@@ -384,12 +584,16 @@ class _FeesScreenState extends State<FeesDemoScreen> {
   _getAtomTokenId(context, authEncryptedString) async {
     var request = http.Request(
         'POST', Uri.parse("https://payment1.atomtech.in/ots/aipay/auth"));
-    request.bodyFields = {'encData': authEncryptedString, 'merchId': atomData!['login'].toString()};
+    request.bodyFields = {
+      'encData': authEncryptedString,
+      'merchId': atomData!['login'].toString()
+    };
 
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       var authApiResponse = await response.stream.bytesToString();
-      debugPrint("API Response: $authApiResponse"); // Log the API response for debugging
+      debugPrint(
+          "API Response: $authApiResponse"); // Log the API response for debugging
 
       final split = authApiResponse.trim().split('&');
       final Map<int, String> values = {
@@ -406,7 +610,8 @@ class _FeesScreenState extends State<FeesDemoScreen> {
             'encKey': atomData!['decResponseKey'].toString()
           });
 
-          debugPrint("Decrypted Response: $result"); // Log the decrypted response for debugging
+          debugPrint(
+              "Decrypted Response: $result"); // Log the decrypted response for debugging
           var respJsonStr = result.toString();
           Map<String, dynamic> jsonInput = jsonDecode(respJsonStr);
 
@@ -420,10 +625,11 @@ class _FeesScreenState extends State<FeesDemoScreen> {
             debugPrint("atomTokenId: $atomTokenId");
             final String payDetails =
                 '{"atomTokenId" : "$atomTokenId","merchId": "${atomData!['login'].toString()}","emailId": "${studentData!['email'].toString()}","mobileNumber":"${studentData!['contact_no'].toString()}", "returnUrl":"$returnUrl"}';
-            _openNdpsPG(
-                payDetails, context, responseHashKey, atomData!['decResponseKey'].toString());
+            _openNdpsPG(payDetails, context, responseHashKey,
+                atomData!['decResponseKey'].toString());
           } else {
-            debugPrint("Problem in auth API response, txnStatusCode: ${jsonInput["responseDetails"]["txnStatusCode"]}");
+            debugPrint(
+                "Problem in auth API response, txnStatusCode: ${jsonInput["responseDetails"]["txnStatusCode"]}");
           }
         } on PlatformException catch (e) {
           debugPrint("Failed to decrypt: '${e.message}'.");
@@ -432,7 +638,8 @@ class _FeesScreenState extends State<FeesDemoScreen> {
         debugPrint("Unexpected response format.");
       }
     } else {
-      debugPrint("Failed to connect to the API. Status code: ${response.statusCode}");
+      debugPrint(
+          "Failed to connect to the API. Status code: ${response.statusCode}");
     }
   }
 
@@ -441,7 +648,14 @@ class _FeesScreenState extends State<FeesDemoScreen> {
         context,
         MaterialPageRoute(
             builder: (context) => WebViewContainer(
-                mode, payDetails, responseHashKey, responseDecryptionKey,selectedFees1,createOrderId, onReturn: _refresh,)));
+                  mode,
+                  payDetails,
+                  responseHashKey,
+                  responseDecryptionKey,
+                  selectedFees1,
+                  createOrderId,
+                  onReturn: _refresh,
+                )));
   }
 
   _getJsonPayloadData() {
@@ -449,19 +663,20 @@ class _FeesScreenState extends State<FeesDemoScreen> {
     payDetails['login'] = atomData!['login'].toString();
     payDetails['userId'] = '686507';
     payDetails['password'] = atomData!['password'].toString();
-    payDetails['prodid'] ='SCHOOL';
+    payDetails['prodid'] = productId;
     payDetails['custFirstName'] = studentData?['student_name'];
     payDetails['custLastName'] = 'N/A';
     payDetails['amount'] = totalAmount.toString();
     payDetails['mobile'] = studentData!['contact_no'].toString();
     payDetails['address'] = studentData!['address'].toString();
     payDetails['email'] = studentData!['email'].toString();
-    payDetails['txnid'] = '${createOrderId}';
+    payDetails['txnid'] = createOrderId;
     payDetails['custacc'] = custacc;
     payDetails['requestHashKey'] = requestHashKey;
     payDetails['responseHashKey'] = responseHashKey;
     payDetails['requestencryptionKey'] = atomData!['encRequestKey'].toString();
-    payDetails['responseencypritonKey'] = atomData!['decResponseKey'].toString();
+    payDetails['responseencypritonKey'] =
+        atomData!['decResponseKey'].toString();
     payDetails['clientcode'] = clientcode;
     payDetails['txncurr'] = txncurr;
     payDetails['mccCode'] = mccCode;
@@ -485,7 +700,7 @@ class _FeesScreenState extends State<FeesDemoScreen> {
         return AlertDialog(
           content: Column(
             mainAxisSize: MainAxisSize.min,
-            children:  [
+            children: [
               CircularProgressIndicator(),
               SizedBox(height: 15.sp),
               Text("Please wait...")
@@ -592,12 +807,37 @@ class PaymentCard extends StatelessWidget {
           ),
         ),
         trailing: status.toLowerCase() == 'paid'
-            ? Checkbox(
-                onChanged: (bool? value) {
-                  if (value != null) {}
-                },
-                value: true,
-                activeColor: Colors.green,
+            ? Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+
+                  IconButton(
+                    icon: Icon(Icons.print),
+                    onPressed: () async {
+                      final Uri uri = Uri.parse('${ApiRoutes.downloadUrl}$id');
+                      try {
+                        if (!await launchUrl(uri,
+                            mode: LaunchMode.externalApplication)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Could not open URL')),
+                          );
+                        }
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Error: $e')),
+                        );
+                      }
+                    },
+                  ),
+
+                  Checkbox(
+                    onChanged: (bool? value) {
+                      if (value != null) {}
+                    },
+                    value: true,
+                    activeColor: Colors.green,
+                  ),
+                ],
               )
             : Checkbox(
                 value: isSelected,
@@ -608,6 +848,98 @@ class PaymentCard extends StatelessWidget {
                 },
               ),
       ),
+    );
+  }
+}
+
+class _CooldownDialog extends StatefulWidget {
+  final int remainingSeconds;
+
+  const _CooldownDialog({required this.remainingSeconds});
+
+  @override
+  _CooldownDialogState createState() => _CooldownDialogState();
+}
+
+class _CooldownDialogState extends State<_CooldownDialog> {
+  late int _currentSeconds;
+  Timer? _dialogTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentSeconds = widget.remainingSeconds;
+    _startTimer();
+  }
+
+  void _startTimer() {
+    _dialogTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_currentSeconds > 0) {
+        setState(() {
+          _currentSeconds--;
+        });
+      } else {
+        _dialogTimer?.cancel();
+        Navigator.pop(
+            context); // Automatically close the dialog when time is up
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _dialogTimer?.cancel();
+    super.dispose();
+  }
+
+  String _formatDuration(int seconds) {
+    final minutes = (seconds ~/ 60).toString().padLeft(2, '0');
+    final secs = (seconds % 60).toString().padLeft(2, '0');
+    return "$minutes:$secs";
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      title: Text(
+        'Payment on Cooldown',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.timer,
+            color: Colors.orange,
+            size: 50.sp,
+          ),
+          SizedBox(height: 10.sp),
+          Text(
+            'Please wait for ${_formatDuration(_currentSeconds)} before you can make another payment.',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.montserrat(
+              fontSize: 14.sp,
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context); // Close the dialog manually
+          },
+          child: Text(
+            'OK',
+            style: GoogleFonts.montserrat(
+              fontWeight: FontWeight.w600,
+              color: Colors.green,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -189,22 +189,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   CarouselExample(),
                   SizedBox(height: 10.sp),
 
-                  _isVisible
-                      ? CarouselFees(
-                    status: 'due',
-                    dueDate: '',
-                    onPayNow: () {
-                      // Handle payment logic
-                    },
-                    custFirstName: studentData?['student_name'] ?? '',
-                    custLastName: 'N/A',
-                    mobile: studentData?['contact_no'] ?? '',
-                    email: studentData?['email'] ?? '',
-                    address: studentData?['address'] ?? '',
-                    payDate: '',
-                    dueAmount: '0',
-                  )
-                      : SizedBox(),
+                  // _isVisible
+                  //     ? CarouselFees(
+                  //   status: 'due',
+                  //   dueDate: '',
+                  //   onPayNow: () {
+                  //     // Handle payment logic
+                  //   },
+                  //   custFirstName: studentData?['student_name'] ?? '',
+                  //   custLastName: 'N/A',
+                  //   mobile: studentData?['contact_no'] ?? '',
+                  //   email: studentData?['email'] ?? '',
+                  //   address: studentData?['address'] ?? '',
+                  //   payDate: '',
+                  //   dueAmount: '0',
+                  // )
+                  //     : SizedBox(),
                    SizedBox(height: 15.sp),
 
                   _buildsellAll('Category', ''),

@@ -17,7 +17,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 class PasswordStudentPage extends StatefulWidget {
   final String pass;
 
-  const PasswordStudentPage({super.key, required this.pass,});
+  const PasswordStudentPage({
+    super.key,
+    required this.pass,
+  });
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -33,17 +36,16 @@ class _LoginPageState extends State<PasswordStudentPage> {
   bool _isPasswordVisible = false;
   bool _isPasswordVisible2 = false;
 
-
   final oldPasswordController = TextEditingController();
   final newPasswordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+
   // Radio Button List Data
   String? selectedOption;
 
   @override
   void initState() {
     super.initState();
-
   }
 
   void _showChangePasswordDialog(BuildContext context) {
@@ -107,14 +109,17 @@ class _LoginPageState extends State<PasswordStudentPage> {
                     Uri uri = Uri.https(
                       'testapi.cjmshimla.in',
                       '/api/change-password',
-                      {'password': newPassword}, // Pass new password as a query parameter
+                      {
+                        'password': newPassword
+                      }, // Pass new password as a query parameter
                     );
 
                     final response = await http.get(
                       uri,
                       headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': 'Bearer $token', // Include token if needed
+                        'Authorization': 'Bearer $token',
+                        // Include token if needed
                       },
                     );
 
@@ -127,7 +132,9 @@ class _LoginPageState extends State<PasswordStudentPage> {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => BottomNavBarScreen(initialIndex: 0,),
+                          builder: (context) => BottomNavBarScreen(
+                            initialIndex: 0,
+                          ),
                         ),
                       );
 
@@ -135,7 +142,9 @@ class _LoginPageState extends State<PasswordStudentPage> {
                     } else {
                       // Handle API error (e.g., wrong old password or server error)
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Failed to change password: ${response.body}")),
+                        SnackBar(
+                            content: Text(
+                                "Failed to change password: ${response.body}")),
                       );
                     }
                   } catch (e) {
@@ -172,11 +181,10 @@ class _LoginPageState extends State<PasswordStudentPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-
-               SizedBox(height: 20.sp),
+              SizedBox(height: 20.sp),
               Container(
-                width: MediaQuery.of(context).size.width*0.90,
-                padding:  EdgeInsets.all(15.sp),
+                width: MediaQuery.of(context).size.width * 0.90,
+                padding: EdgeInsets.all(15.sp),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10.sp),
@@ -200,8 +208,7 @@ class _LoginPageState extends State<PasswordStudentPage> {
                             width: 150.sp,
                             decoration: BoxDecoration(
                                 color: Colors.grey.shade200,
-                                borderRadius: BorderRadius.circular(10.sp)
-                            ),
+                                borderRadius: BorderRadius.circular(10.sp)),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: ClipRRect(
@@ -216,34 +223,37 @@ class _LoginPageState extends State<PasswordStudentPage> {
                               ),
                             ),
                           ),
-                           SizedBox(height: 10.sp),
-                           Text(
+                          SizedBox(height: 10.sp),
+                          Text(
                             'Please change your Password'.toUpperCase(),
                             style: TextStyle(
-                              fontSize: MediaQuery.of(context).size.width*0.04,
+                              fontSize:
+                                  MediaQuery.of(context).size.width * 0.04,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ],
                       ),
-                       SizedBox(height: 20.sp),
+                      SizedBox(height: 20.sp),
                       // Email Input
                       SizedBox(
-                        height: MediaQuery.of(context).size.height*0.07,
-
+                        height: MediaQuery.of(context).size.height * 0.07,
                         child: TextFormField(
                           controller: newPasswordController,
                           obscureText: !_isPasswordVisible,
                           decoration: InputDecoration(
                             prefixIcon: const Icon(CupertinoIcons.lock_fill),
                             hintText: AppStrings.newPassword,
-                            hintStyle: TextStyle(color: Colors.grey.shade500,fontSize: MediaQuery.of(context).size.width*0.035),
-
+                            hintStyle: TextStyle(
+                                color: Colors.grey.shade500,
+                                fontSize:
+                                    MediaQuery.of(context).size.width * 0.035),
                             suffixIcon: IconButton(
                               icon: Icon(
                                 _isPasswordVisible
                                     ? CupertinoIcons.eye_slash_fill
-                                    : CupertinoIcons.eye_solid,size:MediaQuery.of(context).size.height*0.03,
+                                    : CupertinoIcons.eye_solid,
+                                size: MediaQuery.of(context).size.height * 0.03,
                               ),
                               onPressed: () {
                                 setState(() {
@@ -258,31 +268,35 @@ class _LoginPageState extends State<PasswordStudentPage> {
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return AppStrings.passwordRequired;
+                            } else if (value.length < 6) {
+                              return "Password must be at least 6 characters long";
                             }
                             return null;
                           },
                         ),
                       ),
 
-                       SizedBox(height: 15.sp),
+                      SizedBox(height: 15.sp),
                       // Password Input
                       SizedBox(
-                        height: MediaQuery.of(context).size.height*0.07,
-
-
+                        height: MediaQuery.of(context).size.height * 0.07,
                         child: TextFormField(
                           controller: confirmPasswordController,
                           obscureText: !_isPasswordVisible2,
                           decoration: InputDecoration(
                             prefixIcon: const Icon(CupertinoIcons.lock_fill),
                             hintText: AppStrings.confirmPassword,
-                            hintStyle: TextStyle(color: Colors.grey.shade500,fontSize: MediaQuery.of(context).size.width*0.035),
-
+                            hintStyle: TextStyle(
+                              color: Colors.grey.shade500,
+                              fontSize:
+                                  MediaQuery.of(context).size.width * 0.035,
+                            ),
                             suffixIcon: IconButton(
                               icon: Icon(
                                 _isPasswordVisible2
                                     ? CupertinoIcons.eye_slash_fill
-                                    : CupertinoIcons.eye_solid,size:MediaQuery.of(context).size.height*0.03,
+                                    : CupertinoIcons.eye_solid,
+                                size: MediaQuery.of(context).size.height * 0.03,
                               ),
                               onPressed: () {
                                 setState(() {
@@ -297,116 +311,136 @@ class _LoginPageState extends State<PasswordStudentPage> {
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return AppStrings.passwordRequired;
+                            } else if (value.length < 6) {
+                              return "Password must be at least 6 characters long";
                             }
                             return null;
                           },
                         ),
                       ),
-                       SizedBox(height: 20.sp),
-                      if (_isLoading) const CircularProgressIndicator() else SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            padding: const EdgeInsets.symmetric(vertical: 15),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                      SizedBox(height: 20.sp),
+                      if (_isLoading)
+                        const CircularProgressIndicator()
+                      else
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              padding: const EdgeInsets.symmetric(vertical: 15),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                             ),
-                          ),
-                          onPressed: () async {
-                            setState(() {
-                              _isLoading = true;
-                            });
-                            final prefs = await SharedPreferences.getInstance();
-                            final token = prefs.getString('token');
-                            // Handle password change logic
-                            String oldPassword = oldPasswordController.text;
-                            String newPassword = newPasswordController.text;
-                            String confirmPassword = confirmPasswordController.text;
+                            onPressed: () async {
+                              setState(() {
+                                _isLoading = true;
+                              });
+                              final prefs =
+                                  await SharedPreferences.getInstance();
+                              final token = prefs.getString('token');
+                              // Handle password change logic
+                              String oldPassword = oldPasswordController.text;
+                              String newPassword = newPasswordController.text;
+                              String confirmPassword =
+                                  confirmPasswordController.text;
 
-                            if (newPassword == confirmPassword) {
-                              // Proceed with password change
-                              try {
-                                // Disable the button and show loading indicator
-                                // showDialog(
-                                //   context: context,
-                                //   builder: (BuildContext context) {
-                                //     return Center(child: CircularProgressIndicator());
-                                //   },
-                                // );
+                              if (newPassword == confirmPassword) {
+                                // Proceed with password change
+                                try {
+                                  // Disable the button and show loading indicator
+                                  // showDialog(
+                                  //   context: context,
+                                  //   builder: (BuildContext context) {
+                                  //     return Center(child: CircularProgressIndicator());
+                                  //   },
+                                  // );
 
-                                Uri uri = Uri.https(
-                                  'testapi.cjmshimla.in',
-                                  '/api/change-password',
-                                  {'password': newPassword}, // Pass new password as a query parameter
-                                );
-
-                                final response = await http.get(
-                                  uri,
-                                  headers: {
-                                    'Content-Type': 'application/json',
-                                    'Authorization': 'Bearer $token', // Include token if needed
-                                  },
-                                );
-
-                                // Navigator.of(context).pop(); // Close the loading dialog
-
-                                if (response.statusCode == 200) {
-                                  // Password changed successfully
-                                  print("Password changed successfully");
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => BottomNavBarScreen(initialIndex: 0,),
-                                    ),
+                                  Uri uri = Uri.https(
+                                    'testapi.cjmshimla.in',
+                                    '/api/change-password',
+                                    {
+                                      'password': newPassword
+                                    }, // Pass new password as a query parameter
                                   );
 
-                                  // Close the change password dialog
-                                } else {
-                                  // Handle API error (e.g., wrong old password or server error)
+                                  final response = await http.get(
+                                    uri,
+                                    headers: {
+                                      'Content-Type': 'application/json',
+                                      'Authorization': 'Bearer $token',
+                                      // Include token if needed
+                                    },
+                                  );
+
+                                  // Navigator.of(context).pop(); // Close the loading dialog
+
+                                  if (response.statusCode == 200) {
+                                    // Password changed successfully
+                                    print("Password changed successfully");
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            BottomNavBarScreen(
+                                          initialIndex: 0,
+                                        ),
+                                      ),
+                                    );
+
+                                    // Close the change password dialog
+                                  } else {
+                                    // Handle API error (e.g., wrong old password or server error)
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              "Failed to change password: ${response.body}")),
+                                    );
+                                  }
+                                } catch (e) {
+                                  // Handle exception
+                                  Navigator.of(context)
+                                      .pop(); // Close the loading dialog
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text("Failed to change password: ${response.body}")),
+                                    SnackBar(content: Text("Error: $e")),
                                   );
                                 }
-                              } catch (e) {
-                                // Handle exception
-                                Navigator.of(context).pop(); // Close the loading dialog
+                              } else {
+                                // Show error if passwords don't match
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text("Error: $e")),
+                                  SnackBar(
+                                      content:
+                                          Text("New passwords do not match")),
                                 );
                               }
-                            } else {
-                              // Show error if passwords don't match
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("New passwords do not match")),
-                              );
-                            }
-                          },
-
-                          child:  Text(
-                            AppStrings.changePassword.toUpperCase(),
-                            style: TextStyle(fontSize: MediaQuery.of(context).size.width*0.04, color: AppColors.textwhite),
+                            },
+                            child: Text(
+                              AppStrings.changePassword.toUpperCase(),
+                              style: TextStyle(
+                                  fontSize:
+                                      MediaQuery.of(context).size.width * 0.04,
+                                  color: AppColors.textwhite),
+                            ),
                           ),
                         ),
-                      ),
                     ],
                   ),
                 ),
               ),
-
               Column(
                 children: [
-
                   Padding(
-                    padding:  EdgeInsets.only(top: 8.0),
+                    padding: EdgeInsets.only(top: 8.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(0.0),
-                          child: Text('Provider by AVI-SUN',
+                          child: Text(
+                            'Provider by AVI-SUN',
                             style: GoogleFonts.montserrat(
-                              textStyle: Theme.of(context).textTheme.displayLarge,
+                              textStyle:
+                                  Theme.of(context).textTheme.displayLarge,
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w600,
                               fontStyle: FontStyle.normal,
@@ -417,7 +451,6 @@ class _LoginPageState extends State<PasswordStudentPage> {
                       ],
                     ),
                   )
-
                 ],
               ),
             ],
@@ -596,7 +629,6 @@ class _LoginPageState extends State<PasswordStudentPage> {
       //     ),
       //   ),
       // ),
-
     );
   }
 }

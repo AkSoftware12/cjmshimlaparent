@@ -10,6 +10,8 @@ import '../constants.dart';
 import '../UI/Auth/login_screen.dart';
 import 'UI/bottom_navigation.dart';
 
+
+
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -137,3 +139,5 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
+
+

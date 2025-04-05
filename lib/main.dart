@@ -44,11 +44,11 @@ Future<void> main() async {
   if (Platform.isAndroid) {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
-        apiKey: 'AIzaSyBhuh_2exvng2cYi1-WVG8AWFGFgLjRYQM',
-        appId: '1:1012918033516:android:0b6718b40f48b55cb84c49',
-        messagingSenderId: '1012918033516',
-        projectId: 'cjm-ambala',
-        storageBucket: "cjm-ambala.firebasestorage.app",
+        apiKey: 'AIzaSyASMmPy8mhABFOGTEHmkI-vv559WTiw814',
+        appId: '1:164105009272:android:67e2bc460fd3b44376158d',
+        messagingSenderId: '164105009272',
+        projectId: 'cjm-shimla-parent',
+        storageBucket: "cjm-shimla-parent.firebasestorage.app",
       ),
     );
   } else {
@@ -56,6 +56,11 @@ Future<void> main() async {
   }
 
   NotificationService.initNotifications();
+
+  FirebaseMessaging.instance.getToken().then((token) {
+    print("🔥 FCM Token: $token");
+  });
+
 
   // Run app first
   runApp(MyApp(navigatorKey: navigatorKey));

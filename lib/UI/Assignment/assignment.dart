@@ -134,84 +134,84 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
 
                     return Stack(
                       children: [
-                        Card(
-                          elevation: 6,
-                          color: Colors.blueGrey,
-                          // Light background
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.sp),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(10.sp),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                /// **Title & Index**
-                                Row(
-                                  children: [
-                                    Container(
-                                      height: 35.sp,
-                                      width: 35.sp,
-                                      decoration: BoxDecoration(
-                                        color: Colors.blueAccent,
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          '${index + 1}',
-                                          style: GoogleFonts.montserrat(
-                                            fontSize: 15.sp,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 15.sp),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            assignment['title'].toString().toUpperCase()??'??',
-                                            style: GoogleFonts.montserrat(
-                                              fontSize: 13.sp,
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.black87,
-                                            ),
-                                          ),
-                                          SizedBox(height: 5),
-                                          Text(
-                                            '${description ?? 'N/A'}',
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: GoogleFonts.montserrat(
-                                              fontSize: 11.sp,
-                                              color: Colors.grey[600],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-
-                                    // if(assignment['attach']==)
-                                    // _buildButton(
-                                    //   text: 'View',
-                                    //   color: AppColors.secondary,
-                                    //   onTap: () async {
-                                    //     // final Uri pdfUri = Uri.parse(assignment['attach'].toString());
-                                    //     FileOpener.openFile(
-                                    //         assignment['attach'].toString());
-                                    //   },
-                                    // ),
-                                  ],
-                                ),
-
-                              ],
-                            ),
-                          ),
-                        ),
+                        // Card(
+                        //   elevation: 6,
+                        //   color: Colors.blueGrey,
+                        //   // Light background
+                        //   shape: RoundedRectangleBorder(
+                        //     borderRadius: BorderRadius.circular(10.sp),
+                        //   ),
+                        //   child: Padding(
+                        //     padding: EdgeInsets.all(10.sp),
+                        //     child: Column(
+                        //       crossAxisAlignment: CrossAxisAlignment.start,
+                        //       children: [
+                        //         /// **Title & Index**
+                        //         Row(
+                        //           children: [
+                        //             Container(
+                        //               height: 35.sp,
+                        //               width: 35.sp,
+                        //               decoration: BoxDecoration(
+                        //                 color: Colors.blueAccent,
+                        //                 borderRadius: BorderRadius.circular(15),
+                        //               ),
+                        //               child: Center(
+                        //                 child: Text(
+                        //                   '${index + 1}',
+                        //                   style: GoogleFonts.montserrat(
+                        //                     fontSize: 15.sp,
+                        //                     fontWeight: FontWeight.bold,
+                        //                     color: Colors.white,
+                        //                   ),
+                        //                 ),
+                        //               ),
+                        //             ),
+                        //             SizedBox(width: 15.sp),
+                        //             Expanded(
+                        //               child: Column(
+                        //                 crossAxisAlignment:
+                        //                 CrossAxisAlignment.start,
+                        //                 children: [
+                        //                   Text(
+                        //                     assignment['title'].toString().toUpperCase()??'??',
+                        //                     style: GoogleFonts.montserrat(
+                        //                       fontSize: 13.sp,
+                        //                       fontWeight: FontWeight.w700,
+                        //                       color: Colors.black87,
+                        //                     ),
+                        //                   ),
+                        //                   SizedBox(height: 5),
+                        //                   Text(
+                        //                     '${description ?? 'N/A'}',
+                        //                     maxLines: 1,
+                        //                     overflow: TextOverflow.ellipsis,
+                        //                     style: GoogleFonts.montserrat(
+                        //                       fontSize: 11.sp,
+                        //                       color: Colors.grey[600],
+                        //                     ),
+                        //                   ),
+                        //                 ],
+                        //               ),
+                        //             ),
+                        //
+                        //             // if(assignment['attach']==)
+                        //             // _buildButton(
+                        //             //   text: 'View',
+                        //             //   color: AppColors.secondary,
+                        //             //   onTap: () async {
+                        //             //     // final Uri pdfUri = Uri.parse(assignment['attach'].toString());
+                        //             //     FileOpener.openFile(
+                        //             //         assignment['attach'].toString());
+                        //             //   },
+                        //             // ),
+                        //           ],
+                        //         ),
+                        //
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
 
                         Card(
                           margin: EdgeInsets.symmetric(vertical: 3.sp,horizontal: 8.sp),

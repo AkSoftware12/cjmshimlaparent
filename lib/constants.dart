@@ -35,8 +35,6 @@ class ApiRoutes {
 
 
   static const String baseUrl = "https://testapi.cjmshimla.in/api";
-
-
   static const String downloadUrl = "https://testapi.cjmshimla.in/student/fee-receipt/";
 
 

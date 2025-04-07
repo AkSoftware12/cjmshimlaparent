@@ -24,7 +24,7 @@ class _AssignmentDetalisState extends State<AssignmentDetalis> {
         backgroundColor: AppColors.secondary,
         iconTheme: IconThemeData(color: Colors.white),
         title: Text(
-          'Assignment Detalis',
+          'Home Work Detalis',
           style: TextStyle(
               color: Colors.white,
               fontSize: 15.sp,

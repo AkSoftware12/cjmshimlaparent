@@ -166,26 +166,75 @@ class NotificationService {
   }
 
   /// **🔹 Show Local Notification**
+  // static Future<void> _showLocalNotification(RemoteMessage message) async {
+  //   const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+  //     'channelId', 'channelName',
+  //     importance: Importance.max,
+  //     priority: Priority.high,
+  //   );
+  //
+  //   const NotificationDetails generalNotificationDetails =
+  //   NotificationDetails(android: androidDetails);
+  //
+  //   await _flutterLocalNotificationsPlugin.show(
+  //     0,
+  //     message.notification?.title,
+  //     message.notification?.body,
+  //     generalNotificationDetails,
+  //   );
+  // }
+
+
   static Future<void> _showLocalNotification(RemoteMessage message) async {
-    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+    final notification = message.notification;
+    final android = message.notification?.android;
+
+    // Check if an image URL is present
+    final imageUrl = notification?.android?.imageUrl ?? notification?.apple?.imageUrl;
+
+    BigPictureStyleInformation? bigPictureStyleInformation;
+
+    if (imageUrl != null && imageUrl.isNotEmpty) {
+      final String largeIconPath = await _downloadAndSaveFile(imageUrl, 'largeIcon');
+      final String bigPicturePath = await _downloadAndSaveFile(imageUrl, 'bigPicture');
+
+      bigPictureStyleInformation = BigPictureStyleInformation(
+        FilePathAndroidBitmap(bigPicturePath),
+        largeIcon: FilePathAndroidBitmap(largeIconPath),
+        contentTitle: notification?.title,
+        summaryText: notification?.body,
+      );
+    }
+
+    AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
       'channelId', 'channelName',
       importance: Importance.max,
       priority: Priority.high,
+      styleInformation: bigPictureStyleInformation,
     );
 
-    const NotificationDetails generalNotificationDetails =
-    NotificationDetails(android: androidDetails);
+    NotificationDetails generalNotificationDetails = NotificationDetails(
+      android: androidDetails,
+    );
 
     await _flutterLocalNotificationsPlugin.show(
       0,
-      message.notification?.title,
-      message.notification?.body,
+      notification?.title,
+      notification?.body,
       generalNotificationDetails,
     );
   }
+  static Future<String> _downloadAndSaveFile(String url, String fileName) async {
+    final Directory directory = await getApplicationDocumentsDirectory();
+    final String filePath = '${directory.path}/$fileName';
+    final http.Response response = await http.get(Uri.parse(url));
+    final File file = File(filePath);
+    await file.writeAsBytes(response.bodyBytes);
+    return filePath;
+  }
+
 }
 class UpdateChecker {
-  static const String updateApiUrl = "https://yourserver.com/latest_version"; // Backend API URL
 
   static Future<void> checkForUpdate(BuildContext context) async {
     try {

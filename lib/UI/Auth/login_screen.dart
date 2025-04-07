@@ -7,11 +7,12 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../HexColorCode/HexColor.dart';
+import '../ForgotPassword/forgot_password.dart';
 import '/UI/bottom_navigation.dart';
 import '/constants.dart';
 import '../../strings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
 import 'login_student.dart';
 
 class LoginPage extends StatefulWidget {
@@ -309,6 +310,26 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                        SizedBox(height: 10.sp),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) =>
+                                      ForgotPasswordPage()),);
+                            },
+                            child: Text(
+                              "Forgot password?",
+                              style: GoogleFonts.poppins(
+                                textStyle: TextStyle(fontSize: 12.sp,
+                                    fontWeight: FontWeight.normal,
+                                    color: HexColor('#f04949')),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                       Row(
                         children: [
                           CupertinoSwitch (

@@ -20,10 +20,16 @@ class WebViewContainer extends StatefulWidget {
   final String orderId;
   final VoidCallback onReturn;
 
-
-
-  WebViewContainer(this.mode, this.payDetails, this.responsehashKey,
-      this.responseDecryptionKey, this.selectedFees, this.orderId,   {super.key,required this.onReturn,});
+  WebViewContainer(
+    this.mode,
+    this.payDetails,
+    this.responsehashKey,
+    this.responseDecryptionKey,
+    this.selectedFees,
+    this.orderId, {
+    super.key,
+    required this.onReturn,
+  });
 
   @override
   createState() => _WebViewContainerState(this.mode, this.payDetails,
@@ -79,21 +85,47 @@ class _WebViewContainerState extends State<WebViewContainer> {
             debugPrint("payDetails from webview $payDetails");
             _loadHtmlFromAssets(mode);
           },
+
           shouldOverrideUrlLoading: (controller, navigationAction) async {
             debugPrint("shouldOverrideUrlLoading called");
+
             var uri = navigationAction.request.url!;
-            debugPrint(uri.scheme);
-            if (["upi"].contains(uri.scheme)) {
+
+            // for new UPI Intent feature
+
+            if (["upi", "tez", "gpay", "phonepe", "paytmmp", "credpay"]
+                .any(uri.scheme.contains)) {
               debugPrint("UPI URL detected");
+
               // Launch the App
+
               await launchUrl(
                 uri,
               );
-              // and cancel the request
+
+              // cancel the request
+
               return NavigationActionPolicy.CANCEL;
             }
+
             return NavigationActionPolicy.ALLOW;
           },
+
+          // shouldOverrideUrlLoading: (controller, navigationAction) async {
+          //   debugPrint("shouldOverrideUrlLoading called");
+          //   var uri = navigationAction.request.url!;
+          //   debugPrint(uri.scheme);
+          //   if (["upi"].contains(uri.scheme)) {
+          //     debugPrint("UPI URL detected");
+          //     // Launch the App
+          //     await launchUrl(
+          //       uri,
+          //     );
+          //     // and cancel the request
+          //     return NavigationActionPolicy.CANCEL;
+          //   }
+          //   return NavigationActionPolicy.ALLOW;
+          // },
 
           onLoadStop: (controller, url) async {
             debugPrint("onloadstop_url: $url");
@@ -109,7 +141,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
                   source: "document.getElementsByTagName('h5')[0].innerHTML");
               debugPrint("HTML response : $response");
               var transactionResult = "";
-              var data='';
+              var data = '';
 
               if (response.trim().contains("cancelTransaction")) {
                 transactionResult = "Transaction Cancelled!";
@@ -132,8 +164,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
                   var respJsonStr = result.toString();
                   Map<String, dynamic> jsonInput = jsonDecode(respJsonStr);
                   debugPrint("read full respone : $jsonInput");
-                  data=jsonInput.toString();
-
+                  data = jsonInput.toString();
 
                   //calling validateSignature function from atom_pay_helper file
                   var checkFinalTransaction =
@@ -161,7 +192,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
                   debugPrint("Failed to decrypt: '${e.message}'.");
                 }
               }
-              _closeWebView(context, transactionResult,data.toString());
+              _closeWebView(context, transactionResult, data.toString());
             }
           },
         )),
@@ -179,15 +210,14 @@ class _WebViewContainerState extends State<WebViewContainer> {
                 mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))));
   }
 
-  _closeWebView(context, transactionResult,data) {
+  _closeWebView(context, transactionResult, data) {
     // ignore: use_build_context_synchronously
     Navigator.pop(context); // Close current window
     // ignore: use_build_context_synchronously
 
-    if(transactionResult=='Transaction Cancelled!'){
-      _showPaymentCanceledDialog(context,data);
-
-    } else if(transactionResult=='Transaction Success'){
+    if (transactionResult == 'Transaction Cancelled!') {
+      _showPaymentCanceledDialog(context, data);
+    } else if (transactionResult == 'Transaction Success') {
       // widget.onReturn();
       print('Ravikant');
       // orderCreate(context, data);
@@ -202,13 +232,8 @@ class _WebViewContainerState extends State<WebViewContainer> {
         //   ),
         // );
       });
-
-    }
-
-    else{
-      _showPaymentCanceledDialog(context,data);
-
-
+    } else {
+      _showPaymentCanceledDialog(context, data);
     }
     ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Transaction Status = $transactionResult")));
@@ -247,7 +272,6 @@ class _WebViewContainerState extends State<WebViewContainer> {
 
   Future<void> orderCreate(BuildContext context, String dataString) async {
     try {
-
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token') ?? '';
 
@@ -283,7 +307,6 @@ class _WebViewContainerState extends State<WebViewContainer> {
         //     builder: (context) => BottomNavBarScreen(initialIndex: 3,),
         //   ),
         // );
-
       } else {
         print("Failed: ${response.statusCode}, Response: ${response.body}");
       }
@@ -292,7 +315,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
     }
   }
 
-  void _showPaymentSuccessDialog(BuildContext context,String data) {
+  void _showPaymentSuccessDialog(BuildContext context, String data) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -308,7 +331,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children:  [
+              children: [
                 Icon(
                   Icons.check_circle,
                   color: Colors.green,
@@ -338,6 +361,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
       },
     );
   }
+
   void _showPaymentCanceledDialog(BuildContext context, String data) {
     showDialog(
       context: context,
@@ -384,5 +408,4 @@ class _WebViewContainerState extends State<WebViewContainer> {
       },
     );
   }
-
 }

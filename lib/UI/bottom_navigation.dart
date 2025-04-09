@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../UI/Dashboard/HomeScreen%20.dart';
 import '../constants.dart';
@@ -13,11 +14,8 @@ import 'Assignment/assignment.dart';
 import 'Attendance/AttendanceScreen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import 'Auth/login_screen.dart';
 import 'Auth/login_student.dart';
-import 'FAQ/faq.dart';
-import 'Fees/FeesScreen.dart';
 import 'Fees/fee_demo.dart';
 import 'Gallery/gallery_tab.dart';
 import 'Help/help.dart';
@@ -44,6 +42,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
   List<dynamic> studentList = []; // ✅ Dropdown ke liye data list
   String? selectedStudent; // ✅ Selected student ka value
   String? selectedOption;
+  String currentVersion ='';
   final Dio _dio = Dio(); // Initialize Dio
   bool _isLoading = false;
   // List of screens
@@ -74,6 +73,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
   @override
   void initState() {
     super.initState();
+    checkForVersion(context);
     fetchStudentData();
 
     _selectedIndex = widget.initialIndex; // Set the initial tab index
@@ -81,6 +81,13 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
 
 
   }
+
+   Future<void> checkForVersion(BuildContext context) async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+     currentVersion = packageInfo.version;
+  }
+
+
   Future<void> fetchStudentData() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
@@ -818,6 +825,16 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                     Padding(
                       padding: EdgeInsets.only(bottom: 15.sp),
                     ),
+                    Center(
+                      child: Text('Version :-  $currentVersion',
+                        style: GoogleFonts.cabin(
+                          textStyle: TextStyle(
+                              color: Colors.white,
+                              fontSize: 8.sp,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    )
                   ],
                 ),
               )

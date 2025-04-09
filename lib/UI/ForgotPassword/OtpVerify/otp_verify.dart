@@ -14,6 +14,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../ChangePassword/change_password.dart';
+import '../ChangePassword/passwoed_change.dart';
 
 
 class OtpVerifyPage extends StatefulWidget {
@@ -31,6 +32,11 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
 
   final _focusNode = FocusNode();
 
+  Timer? _timer;
+  Duration _duration = const Duration(minutes: 5);
+  String _timeLeft = "05:00";
+  bool _otpExpired = false;
+
   TextEditingController textEditingController = TextEditingController();
 
   // ..text = "123456";
@@ -43,104 +49,303 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
   String currentText = "";
 
 
-  // Future<void> verifyOtpApi(BuildContext context) async {
-  //   showDialog(
-  //     context: context,
-  //     barrierDismissible: false,
-  //     builder: (BuildContext context) {
-  //       return Center(
-  //         child: Row(
-  //           mainAxisSize: MainAxisSize.min,
-  //           children: [
-  //             CircularProgressIndicator(
-  //               color: Colors.orangeAccent,
-  //             ),
-  //             // SizedBox(width: 16.0),
-  //             // Text("Logging in..."),
-  //           ],
-  //         ),
-  //       );
-  //     },
-  //   );
-  //
-  //   try {
-  //     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  //     String? deviceToken = await _firebaseMessaging.getToken();
-  //     print('Device id: $deviceToken');
-  //
-  //     String otp = textEditingController.text;
-  //
-  //     if (formKey.currentState!.validate()) {
-  //       setState(() {
-  //         _isLoading = true;
-  //       });
-  //       String apiUrl = verifyOtp; // Replace with your API endpoint
-  //
-  //       final response = await http.post(
-  //         Uri.parse(apiUrl),
-  //         body: {
-  //           'email': widget.email,
-  //           'otp': otp,
-  //           'device_id': deviceToken,
-  //         },
-  //       );
-  //       setState(() {
-  //         _isLoading =
-  //         false; // Set loading state to false after registration completes
-  //       });
-  //       if (response.statusCode == 200) {
-  //         final Map<String, dynamic> responseData = json.decode(response.body);
-  //         final SharedPreferences prefs = await SharedPreferences.getInstance();
-  //         final String token = responseData['token'];
-  //         // Save token using shared_preferences
-  //         await prefs.setString('tokenForgot', token);
-  //
-  //         print(responseData);
-  //
-  //         Navigator.pushReplacement(
-  //           context,
-  //           MaterialPageRoute(
-  //             builder: (context) => ChangePasswordPage(),
-  //           ),
-  //         );
-  //
-  //         print('verify otp successfully!');
-  //         // print(token);
-  //         print(response.body);
-  //       } else {
-  //         // Registration failed
-  //         // You may handle the error response here, e.g., show an error message
-  //         print('otp failed!');
-  //       }
-  //     }
-  //   } catch (e) {
-  //     setState(() {
-  //       _isLoading =
-  //       false; // Set loading state to false after registration completes
-  //     });
-  //     Navigator.pop(context); // Close the progress dialog
-  //     // Handle errors appropriately
-  //     print('Error during login: $e');
-  //     // Show a snackbar or display an error message
-  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //       content: Text('Failed to log in. Please try again.'),
-  //     ));
-  //   }
-  // }
+  Future<void> verifyOtpApi(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Center(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(
+                color: Colors.orangeAccent,
+              ),
+              // SizedBox(width: 16.0),
+              // Text("Logging in..."),
+            ],
+          ),
+        );
+      },
+    );
+
+    try {
+      final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+      String? deviceToken = await _firebaseMessaging.getToken();
+      print('Device id: $deviceToken');
+
+      String otp = textEditingController.text;
+
+      if (formKey.currentState!.validate()) {
+        setState(() {
+          _isLoading = true;
+        });
+        String apiUrl = ApiRoutes.verifyOtp; // Replace with your API endpoint
+
+        final response = await http.post(
+          Uri.parse(apiUrl),
+          // Uri.parse('http://192.168.1.2/cjm_shimla/api/verifyOtp'),
+          body: {
+            'email': widget.email,
+            'otp': otp,
+            'fcm': deviceToken,
+          },
+        );
+        setState(() {
+          _isLoading =
+          false; // Set loading state to false after registration completes
+        });
+        if (response.statusCode == 200) {
+          final Map<String, dynamic> responseData = json.decode(response.body);
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+          final String token = responseData['token'];
+          // Save token using shared_preferences
+          await prefs.setString('tokenForgot', token);
+
+          print(responseData);
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PasswordChangePage(),
+            ),
+          );
+
+          print('verify otp successfully!');
+          // print(token);
+          print(response.body);
+        } else if(response.statusCode == 400){
+
+          Navigator.pop(context); // Close the progress dialog
 
 
+          showOtpMismatchDialog(context);
+
+        }
+
+
+
+        else {
+          // Registration failed
+          // You may handle the error response here, e.g., show an error message
+          print('otp failed!');
+        }
+      }
+    } catch (e) {
+      setState(() {
+        _isLoading =
+        false; // Set loading state to false after registration completes
+      });
+      Navigator.pop(context); // Close the progress dialog
+      // Handle errors appropriately
+      print('Error during login: $e');
+      // Show a snackbar or display an error message
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Failed to log in. Please try again.'),
+      ));
+    }
+  }
+
+  void showOtpMismatchDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        backgroundColor: Colors.white,
+        elevation: 12,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: Image.asset(
+                      'assets/alert.png',
+                      height: 100,
+                      // repeat: false,
+                    ),
+                  ),
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(20),
+                      onTap: () => Navigator.of(context).pop(),
+                      child: const Icon(Icons.close, size: 24, color: Colors.grey),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'OTP Mismatch!',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                'The OTP you entered is not correct.\nPlease try again carefully.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black54,
+                ),
+              ),
+              const SizedBox(height: 25),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.secondary,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        'Close',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void showOtpExpiredDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        backgroundColor: Colors.white,
+        elevation: 12,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: Image.asset(
+                      'assets/alert.png',
+                      height: 100,
+                    ),
+                  ),
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(20),
+                      onTap: () => Navigator.of(context).pop(),
+                      child: const Icon(Icons.close, size: 24, color: Colors.grey),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'OTP Expired!',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.orangeAccent,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                'Your OTP has expired.\nPlease request a new one.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black54,
+                ),
+              ),
+              const SizedBox(height: 25),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.secondary,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        'Close',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   void initState() {
     errorController = StreamController<ErrorAnimationType>();
+    _startTimer();
     super.initState();
   }
 
   @override
   void dispose() {
     errorController!.close();
+    _timer?.cancel();
 
     super.dispose();
+  }
+
+
+  void _startTimer() {
+    _otpExpired = false;
+    _duration = const Duration(minutes: 5);
+    _updateTimeLeft();
+    _timer?.cancel();
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_duration.inSeconds == 0) {
+        setState(() {
+          _otpExpired = true;
+          timer.cancel();
+        });
+      } else {
+        setState(() {
+          _duration -= const Duration(seconds: 1);
+          _updateTimeLeft();
+        });
+      }
+    });
+  }
+
+  void _updateTimeLeft() {
+    final minutes = _duration.inMinutes.remainder(60).toString().padLeft(2, '0');
+    final seconds = _duration.inSeconds.remainder(60).toString().padLeft(2, '0');
+    _timeLeft = "$minutes:$seconds";
   }
 
   // snackBar Widget
@@ -247,6 +452,21 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
                         Text('')
                       ],
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          _otpExpired ? "OTP expired." : "OTP will expire in $_timeLeft",
+                          style: TextStyle(
+                            color: _otpExpired ? Colors.red : AppColors.secondary,
+                            fontSize: 12.sp,
+                          ),
+                        ),
+                        SizedBox(height: 10.sp),
+
+                        Text('')
+                      ],
+                    ),
                     SizedBox(height: 50.sp),
                     Form(
                       key: formKey,
@@ -343,6 +563,20 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
                     Container(
                       margin:
                       const EdgeInsets.symmetric(vertical: 16.0,),
+                      decoration: BoxDecoration(
+                          color: AppColors.secondary,
+                          borderRadius: BorderRadius.circular(5),
+                          // boxShadow: [
+                          //   BoxShadow(
+                          //       color: Colors.orange.shade200,
+                          //       offset: const Offset(1, -2),
+                          //       blurRadius: 5),
+                          //   BoxShadow(
+                          //       color: Colors.orange.shade200,
+                          //       offset: const Offset(-1, 2),
+                          //       blurRadius: 5)
+                          // ]
+                      ),
                       child: ButtonTheme(
                         height: 50,
                         child: TextButton(
@@ -350,14 +584,9 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
 
                             if (formKey.currentState!.validate()) {
 
-                              // verifyOtpApi(context);
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ChangePasswordPage(),
-                                ),
-                              );
+                              _otpExpired ? showOtpExpiredDialog(context) :  verifyOtpApi(context);
 
+                              // verifyOtpApi(context);
 
                             }
 
@@ -394,41 +623,27 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
                           ),
                         ),
                       ),
-                      decoration: BoxDecoration(
-                          color: AppColors.secondary,
-                          borderRadius: BorderRadius.circular(5),
-                          // boxShadow: [
-                          //   BoxShadow(
-                          //       color: Colors.orange.shade200,
-                          //       offset: const Offset(1, -2),
-                          //       blurRadius: 5),
-                          //   BoxShadow(
-                          //       color: Colors.orange.shade200,
-                          //       offset: const Offset(-1, 2),
-                          //       blurRadius: 5)
-                          // ]
-                      ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                         Text(
-                          "Didn't receive the code? ",
-                          style: TextStyle(color: Colors.black54, fontSize: 11.sp),
-                        ),
-                        TextButton(
-                          onPressed: () => snackBar("OTP resend!!"),
-                          child:  Text(
-                            "RESEND",
-                            style: TextStyle(
-                              color: AppColors.secondary,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13.sp,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: [
+                    //      Text(
+                    //       "Didn't receive the code? ",
+                    //       style: TextStyle(color: Colors.black54, fontSize: 11.sp),
+                    //     ),
+                    //     TextButton(
+                    //       onPressed: () => snackBar("OTP resend!!"),
+                    //       child:  Text(
+                    //         "RESEND",
+                    //         style: TextStyle(
+                    //           color: AppColors.secondary,
+                    //           fontWeight: FontWeight.bold,
+                    //           fontSize: 13.sp,
+                    //         ),
+                    //       ),
+                    //     )
+                    //   ],
+                    // ),
 
                     const SizedBox(
                       height: 16,

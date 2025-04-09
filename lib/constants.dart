@@ -73,4 +73,6 @@ class ApiRoutes {
   static const String atompay= "$baseUrl/atompay";
   static const String passwordChange= "$baseUrl/change-password";
   static const String updateApk= "$baseUrl/update-apk";
+  static const String forgotPassword= "$baseUrl/forgot-password";
+  static const String verifyOtp= "$baseUrl/verifyOtp";
 }

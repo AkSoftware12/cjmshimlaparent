@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import '../splash_sreen.dart';
 import 'UI/Auth/login_screen.dart';
@@ -325,14 +326,20 @@ class UpdateChecker {
             ],
           ),
 
-          content:  Padding(
-            padding:  EdgeInsets.only(bottom: 18.sp),
+          content: Padding(
+            padding: EdgeInsets.only(bottom: 18.sp),
             child: Text(
-              "A new version of the app is available. Please update to continue using the app smoothly.",
-              style: TextStyle(fontSize: 13.sp),
+              "First, click the 'Update Now' button to download the new APK. After that, uninstall the old version of the app and install the newly downloaded APK.",
+              style: GoogleFonts.poppins(
+                textStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w500),
+              ),
               textAlign: TextAlign.center,
             ),
           ),
+
 
           actions: [
             // Uncomment this if you want a "Later" button

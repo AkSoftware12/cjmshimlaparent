@@ -43,7 +43,7 @@ class ApiRoutes {
 
   // Local App url
 
-  // static const String baseUrl = "http://192.168.1.3/cjm_shimla/api";
+  // static const String baseUrl = "http://192.168.1.7/cjm_shimla/api";
   // static const String downloadUrl = "http://192.168.1.3/cjm_shimla/student/fee-receipt/";
 
 

@@ -227,6 +227,8 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
       ),
     );
   }
+
+
   @override
   Widget build(BuildContext context) {
 

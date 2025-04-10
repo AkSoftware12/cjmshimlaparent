@@ -160,6 +160,9 @@ class _FeesScreenState extends State<FeesDemoScreen> {
         fees = data['fees'];
         fetchStudentData();
         isLoading = false;
+
+        print('FEE List : $fees');
+
       });
     } else {
       setState(() {
@@ -213,6 +216,7 @@ class _FeesScreenState extends State<FeesDemoScreen> {
 
     Map<String, dynamic> body = {
       "fee_ids": selectedFees1 ?? [],
+      "student_id": studentData?['student_id'].toString(),
     };
 
     try {
@@ -298,38 +302,76 @@ class _FeesScreenState extends State<FeesDemoScreen> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(20.0),
           ),
-          title: Text(
-            'Payment Successful',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          content: SingleChildScrollView(
+          titlePadding: EdgeInsets.zero,
+          contentPadding: EdgeInsets.zero,
+          content: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.green.shade400, Colors.green.shade700],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(20.0),
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                const SizedBox(height: 20),
                 Icon(
-                  Icons.check_circle,
-                  color: Colors.green,
-                  size: 60,
+                  Icons.check_circle_rounded,
+                  color: Colors.white,
+                  size: 80,
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
-                  'Your payment has been processed successfully!',
-                  textAlign: TextAlign.center,
+                  'Payment Successful',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                  ),
                 ),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Text(
+                    'Your payment has been processed successfully!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.green.shade700,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'OK',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
               ],
             ),
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('OK'),
-            ),
-          ],
         );
       },
     );
@@ -498,10 +540,10 @@ class _FeesScreenState extends State<FeesDemoScreen> {
                             payDate: fees[index]['pay_date'].toString(),
                             id: fees[index]['id'],
                             isSelected: selectedFees1
-                                .contains(fees[index]['id'].toString()),
+                                .contains(fees[index]['installment_id'].toString()),
                             onSelect: (bool selected) {
                               _toggleSelection(
-                                  fees[index]['id'],
+                                  fees[index]['installment_id'],
                                   double.parse(
                                       fees[index]['to_pay_amount'].toString()));
                               print(selectedFees1);
@@ -684,8 +726,8 @@ class _FeesScreenState extends State<FeesDemoScreen> {
     payDetails['returnUrl'] = returnUrl;
     payDetails['mode'] = mode;
     payDetails['udf1'] = '${studentData?['student_id'].toString()}';
-    payDetails['udf2'] = '${createOrderId}';
-    payDetails['udf3'] = '${selectedFees1}';
+    payDetails['udf2'] = createOrderId;
+    payDetails['udf3'] = '$selectedFees1';
     payDetails['udf4'] = udf4;
     payDetails['udf5'] = udf5;
     String jsonPayLoadData = getRequestJsonData(payDetails);

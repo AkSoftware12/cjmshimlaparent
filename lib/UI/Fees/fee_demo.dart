@@ -75,10 +75,10 @@ class _FeesScreenState extends State<FeesDemoScreen> {
   final String auth_API_url =
       "https://payment1.atomtech.in/ots/aipay/auth"; // prod
 
-  final String returnUrl =
-      "https://pgtest.atomtech.in/mobilesdk/param"; //return url uat
   // final String returnUrl =
-  //     "https://payment.atomtech.in/mobilesdk/param"; ////return url production
+  //     "https://pgtest.atomtech.in/mobilesdk/param"; //return url uat
+  final String returnUrl =
+      "https://payment.atomtech.in/mobilesdk/param"; ////return url production
 
   final String payDetails = '';
 

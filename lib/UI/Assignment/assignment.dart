@@ -213,91 +213,110 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
                         //   ),
                         // ),
 
-                        Card(
-                          margin: EdgeInsets.symmetric(vertical: 3.sp,horizontal: 8.sp),
-                          elevation: 6,
-                          color: Colors.white,
-                          // Light background
-                          shadowColor: Colors.black26,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(11.sp),
-                          ),
-                          child: GestureDetector(
-                            onTap: (){
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) =>  AssignmentDetalis(title: '${assignment['title'].toString()}', descripation: '${assignment['description'].toString()}',)),
-                              );
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.all(10.sp),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  /// **Title & Index**
-                                  Row(
-                                    children: [
-                                      Container(
-                                        height: 35.sp,
-                                        width: 35.sp,
-                                        decoration: BoxDecoration(
-                                          color: AppColors.secondary,
-                                          borderRadius: BorderRadius.circular(10),
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            '${index + 1}',
-                                            style: GoogleFonts.montserrat(
-                                              fontSize: 15.sp,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
+                        GestureDetector(
+                          onTap: (){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) =>  AssignmentDetalis(title: '${assignment['title'].toString()}', descripation: '${assignment['description'].toString()}', date: '${assignment['created_at'].toString()}',)),
+                            );
+                          },
+                          child: Card(
+                            margin: EdgeInsets.symmetric(vertical: 3.sp,horizontal: 8.sp),
+                            elevation: 6,
+                            color: Colors.white,
+                            // Light background
+                            shadowColor: Colors.black26,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(11.sp),
+                            ),
+                            child: GestureDetector(
+                              onTap: (){
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(builder: (context) =>  AssignmentDetalis(title: '${assignment['title'].toString()}', descripation: '${assignment['description'].toString()}',)),
+                                // );
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.all(10.sp),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    /// **Title & Index**
+                                    Row(
+                                      children: [
+                                        Container(
+                                          height: 35.sp,
+                                          width: 35.sp,
+                                          decoration: BoxDecoration(
+                                            color: AppColors.secondary,
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              '${index + 1}',
+                                              style: GoogleFonts.montserrat(
+                                                fontSize: 15.sp,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      SizedBox(width: 10.sp),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              assignment['title']
-                                                  .toString()
-                                                  .toUpperCase(),
-                                              style: GoogleFonts.montserrat(
-                                                fontSize: 13.sp,
-                                                fontWeight: FontWeight.w700,
-                                                color: Colors.black87,
+                                        SizedBox(width: 10.sp),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                assignment['title']
+                                                    .toString()
+                                                    .toUpperCase(),
+                                                style: GoogleFonts.montserrat(
+                                                  fontSize: 13.sp,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Colors.black87,
+                                                ),
                                               ),
-                                            ),
-                                            SizedBox(height: 5),
-                                            Text(
-                                              description,
-                                              // maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: GoogleFonts.montserrat(
-                                                fontSize: 11.sp,
-                                                color: Colors.grey[600],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      if(assignment['attach']=='null' && assignment['attach']=='')
-                                      _buildButton(
-                                        text: 'View',
-                                        color: AppColors.secondary,
-                                        onTap: () async {
-                                          // final Uri pdfUri = Uri.parse(assignment['attach'].toString());
-                                          FileOpener.openFile(
-                                              assignment['attach'].toString());
-                                        },
-                                      ),
-                                    ],
-                                  ),
+                                              SizedBox(height: 1),
 
-                                ],
+                                              Text(
+                                                DateFormat('dd-MM-yyyy').format(DateTime.parse(assignment['created_at'].toString())),
+
+                                                style: GoogleFonts.montserrat(
+                                                  fontSize: 11.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.black87,
+                                                ),
+                                              ),
+                                              SizedBox(height: 1),
+                                              Text(
+                                                description,
+                                                // maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: GoogleFonts.montserrat(
+                                                  fontSize: 11.sp,
+                                                  color: Colors.grey[600],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        if(assignment['attach']=='null' && assignment['attach']=='')
+                                        _buildButton(
+                                          text: 'View',
+                                          color: AppColors.secondary,
+                                          onTap: () async {
+                                            // final Uri pdfUri = Uri.parse(assignment['attach'].toString());
+                                            FileOpener.openFile(
+                                                assignment['attach'].toString());
+                                          },
+                                        ),
+                                      ],
+                                    ),
+
+                                  ],
+                                ),
                               ),
                             ),
                           ),

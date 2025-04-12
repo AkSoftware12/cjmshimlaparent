@@ -208,6 +208,9 @@ class _FeesScreenState extends State<FeesDemoScreen> {
   }
 
   Future<void> orderCreate(BuildContext context) async {
+    showLoadingDialog(context);
+
+
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
     print("Token: $token");
@@ -566,6 +569,7 @@ class _FeesScreenState extends State<FeesDemoScreen> {
                                 _showCooldownDialog(context);
                               } else {
                                 // Proceed with payment when timer is not running
+
                                 orderCreate(context);
                                 startCooldown();
                               }
@@ -597,7 +601,7 @@ class _FeesScreenState extends State<FeesDemoScreen> {
 
   void _initNdpsPayment(BuildContext context, String responseHashKey,
       String responseDecryptionKey) {
-    showLoadingDialog(context);
+    // showLoadingDialog(context);
     _getEncryptedPayUrl(context, responseHashKey, responseDecryptionKey);
   }
 

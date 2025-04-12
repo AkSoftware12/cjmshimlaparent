@@ -2,14 +2,17 @@ import 'package:cjmshimlaparent/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:html/parser.dart' as html_parser;
+import 'package:intl/intl.dart';
 
 class AssignmentDetalis extends StatefulWidget {
   final String title;
   final String descripation;
+  final String date;
 
   const AssignmentDetalis(
-      {super.key, required this.title, required this.descripation});
+      {super.key, required this.title, required this.descripation, required this.date});
 
   @override
   State<AssignmentDetalis> createState() => _AssignmentDetalisState();
@@ -54,6 +57,16 @@ class _AssignmentDetalisState extends State<AssignmentDetalis> {
                             fontSize: 15.sp,
                             fontWeight: FontWeight.w700),
                       ),
+                      Text(
+                        DateFormat('dd-MM-yyyy').format(DateTime.parse(widget.date.toString())),
+
+                        style: GoogleFonts.montserrat(
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+
                       SizedBox(
                         height: 20.sp,
                       ),

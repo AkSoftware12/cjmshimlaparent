@@ -106,7 +106,7 @@ class _LoginPageState extends State<PasswordChangePage> {
                     // );
 
                     Uri uri = Uri.https(
-                      'testapi.cjmshimla.in',
+                      'softcjm.cjmshimla.in',
                       '/api/change-password',
                       {
                         'password': newPassword

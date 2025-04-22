@@ -5,7 +5,7 @@ description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 
-version: 1.0.10+10
+version: 1.0.14+14
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
@@ -40,7 +40,7 @@ dependencies:
   fluttertoast: ^8.2.8
   encrypt: ^5.0.1
   crypto: ^3.0.2
-  flutter_inappwebview: ^5.7.2+3
+#  flutter_inappwebview: ^5.7.2+3
   syncfusion_flutter_datepicker: ^24.2.6
   flutter_screenutil: ^5.9.0
   day_picker: ^2.3.0

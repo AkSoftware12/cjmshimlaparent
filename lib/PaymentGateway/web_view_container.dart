@@ -44,8 +44,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
   final _key = UniqueKey();
   late InAppWebViewController _controller;
 
-  final Completer<InAppWebViewController> _controllerCompleter =
-      Completer<InAppWebViewController>();
+  final Completer<InAppWebViewController> _controllerCompleter = Completer<InAppWebViewController>();
 
   @override
   void initState() {
@@ -199,6 +198,22 @@ class _WebViewContainerState extends State<WebViewContainer> {
       ),
     );
   }
+
+  // Future<void> _loadHtmlFromAssets(String mode) async {
+  //   final localUrl = mode == 'uat' ? 'assets/aipay_uat.html' : 'assets/aipay_prod.html';
+  //
+  //   try {
+  //     String fileText = await rootBundle.loadString(localUrl);
+  //     await _controller.loadData(
+  //       data: fileText,
+  //       mimeType: 'text/html',
+  //       encoding: 'utf-8',
+  //       // baseUrl: Uri.dataFromString('', mimeType: 'text/html'),
+  //     );
+  //   } catch (e) {
+  //     print("Error loading HTML file: $e");
+  //   }
+  // }
 
   _loadHtmlFromAssets(mode) async {
     final localUrl =

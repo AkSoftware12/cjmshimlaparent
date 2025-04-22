@@ -567,39 +567,39 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                             ),
                           ),
 
-                          ListTile(
-                            title: Text(
-                              'Report Card',
-                              style: GoogleFonts.cabin(
-                                textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                            trailing: Icon(Icons.report,color: Colors.white,size: 20.sp,),
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return ReportCardScreen();
-                                  },
-                                ),
-                              );
-
-                            },
-                          ),
-                          Padding(
-                            padding:
-                            EdgeInsets.only(left: 10.sp, right: 10.sp),
-                            child: Divider(
-                              height: 1.sp,
-                              color: Colors.grey.shade200,
-                              thickness: 1.sp,
-                            ),
-                          ),
+                          // ListTile(
+                          //   title: Text(
+                          //     'Report Card',
+                          //     style: GoogleFonts.cabin(
+                          //       textStyle: TextStyle(
+                          //           color: Colors.white,
+                          //           fontSize: 13.sp,
+                          //           fontWeight: FontWeight.w500),
+                          //     ),
+                          //   ),
+                          //   trailing: Icon(Icons.report,color: Colors.white,size: 20.sp,),
+                          //   onTap: () {
+                          //     Navigator.pop(context);
+                          //     Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(
+                          //         builder: (context) {
+                          //           return ReportCardScreen();
+                          //         },
+                          //       ),
+                          //     );
+                          //
+                          //   },
+                          // ),
+                          // Padding(
+                          //   padding:
+                          //   EdgeInsets.only(left: 10.sp, right: 10.sp),
+                          //   child: Divider(
+                          //     height: 1.sp,
+                          //     color: Colors.grey.shade200,
+                          //     thickness: 1.sp,
+                          //   ),
+                          // ),
 
                           ListTile(
                             title: Text(
@@ -677,126 +677,126 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
 
 
 
-                          ListTile(
-                            title: Text(
-                              'Help',
-                              style: GoogleFonts.cabin(
-                                textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                            trailing: Image.asset('assets/help.png',
-                              color: Colors.white,
-                              height: 20.sp, // Adjust the size as needed
-                              width: 20.sp,
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return HelpScreen(appBar: 'Help',);
-                                  },
-                                ),
-                              );
-
-                            },
-                          ),
-
-                          Padding(
-                            padding:
-                            EdgeInsets.only(left: 10.sp, right: 10.sp),
-                            child: Divider(
-                              height: 1.sp,
-                              color: Colors.grey.shade200,
-                              thickness: 1.sp,
-                            ),
-                          ),
-
-
-                          ListTile(
-                            title: Text(
-                              'Privacy',
-                              style: GoogleFonts.cabin(
-                                textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                            trailing:Icon(
-                              Icons.privacy_tip,
-                              color: Colors.white,
-                              size: 20.sp,
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return WebViewExample(
-                                      title: 'Privacy',
-                                      url: 'https://cjmshimla.in/%20privacy_policy.html',
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                          Padding(
-                            padding:
-                            EdgeInsets.only(left: 10.sp, right: 10.sp),
-                            child: Divider(
-                              height: 1.sp,
-                              color: Colors.grey.shade200,
-                              thickness: 1.sp,
-                            ),
-                          ),
-
-                          ListTile(
-                            title: Text(
-                              'Terms & Condition',
-                              style: GoogleFonts.cabin(
-                                textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                            trailing: Icon(
-                              Icons.event_note_outlined,
-                              color: Colors.white,
-                              size: 20.sp,
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return WebViewExample(
-                                      title: 'Terms & Condition',
-                                      url:
-                                      'https://cjmshimla.in/%20privacy_policy.html',
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          ),
+                          // ListTile(
+                          //   title: Text(
+                          //     'Help',
+                          //     style: GoogleFonts.cabin(
+                          //       textStyle: TextStyle(
+                          //           color: Colors.white,
+                          //           fontSize: 13.sp,
+                          //           fontWeight: FontWeight.w500),
+                          //     ),
+                          //   ),
+                          //   trailing: Image.asset('assets/help.png',
+                          //     color: Colors.white,
+                          //     height: 20.sp, // Adjust the size as needed
+                          //     width: 20.sp,
+                          //   ),
+                          //   onTap: () {
+                          //     Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(
+                          //         builder: (context) {
+                          //           return HelpScreen(appBar: 'Help',);
+                          //         },
+                          //       ),
+                          //     );
+                          //
+                          //   },
+                          // ),
+                          //
+                          // Padding(
+                          //   padding:
+                          //   EdgeInsets.only(left: 10.sp, right: 10.sp),
+                          //   child: Divider(
+                          //     height: 1.sp,
+                          //     color: Colors.grey.shade200,
+                          //     thickness: 1.sp,
+                          //   ),
+                          // ),
 
 
-
-                          Padding(
-                            padding:
-                            EdgeInsets.only(left: 10.sp, right: 10.sp),
-                            child: Divider(
-                              height: 1.sp,
-                              color: Colors.grey.shade200,
-                              thickness: 1.sp,
-                            ),
-                          ),
+                          // ListTile(
+                          //   title: Text(
+                          //     'Privacy',
+                          //     style: GoogleFonts.cabin(
+                          //       textStyle: TextStyle(
+                          //           color: Colors.white,
+                          //           fontSize: 13.sp,
+                          //           fontWeight: FontWeight.w500),
+                          //     ),
+                          //   ),
+                          //   trailing:Icon(
+                          //     Icons.privacy_tip,
+                          //     color: Colors.white,
+                          //     size: 20.sp,
+                          //   ),
+                          //   onTap: () {
+                          //     Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(
+                          //         builder: (context) {
+                          //           return WebViewExample(
+                          //             title: 'Privacy',
+                          //             url: 'https://cjmshimla.in/%20privacy_policy.html',
+                          //           );
+                          //         },
+                          //       ),
+                          //     );
+                          //   },
+                          // ),
+                          // Padding(
+                          //   padding:
+                          //   EdgeInsets.only(left: 10.sp, right: 10.sp),
+                          //   child: Divider(
+                          //     height: 1.sp,
+                          //     color: Colors.grey.shade200,
+                          //     thickness: 1.sp,
+                          //   ),
+                          // ),
+                          //
+                          // ListTile(
+                          //   title: Text(
+                          //     'Terms & Condition',
+                          //     style: GoogleFonts.cabin(
+                          //       textStyle: TextStyle(
+                          //           color: Colors.white,
+                          //           fontSize: 13.sp,
+                          //           fontWeight: FontWeight.w500),
+                          //     ),
+                          //   ),
+                          //   trailing: Icon(
+                          //     Icons.event_note_outlined,
+                          //     color: Colors.white,
+                          //     size: 20.sp,
+                          //   ),
+                          //   onTap: () {
+                          //     Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(
+                          //         builder: (context) {
+                          //           return WebViewExample(
+                          //             title: 'Terms & Condition',
+                          //             url:
+                          //             'https://cjmshimla.in/%20privacy_policy.html',
+                          //           );
+                          //         },
+                          //       ),
+                          //     );
+                          //   },
+                          // ),
+                          //
+                          //
+                          //
+                          // Padding(
+                          //   padding:
+                          //   EdgeInsets.only(left: 10.sp, right: 10.sp),
+                          //   child: Divider(
+                          //     height: 1.sp,
+                          //     color: Colors.grey.shade200,
+                          //     thickness: 1.sp,
+                          //   ),
+                          // ),
                           ListTile(
                             title: Text(
                               'Logout',

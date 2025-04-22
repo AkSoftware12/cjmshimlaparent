@@ -38,7 +38,7 @@ class _FeesScreenState extends State<FeesDemoScreen> {
   int remainingSeconds = 0;
 
   static const String disableTimeKey = 'pay_button_disabled_time';
-  static const int cooldownMinutes = 10;
+  static const int cooldownMinutes = 8;
 
   // merchant configuration data
   final String login = "317157"; //mandatory
@@ -542,8 +542,7 @@ class _FeesScreenState extends State<FeesDemoScreen> {
                             dueDate: fees[index]['due_date'].toString(),
                             payDate: fees[index]['pay_date'].toString(),
                             id: fees[index]['id'],
-                            isSelected: selectedFees1
-                                .contains(fees[index]['installment_id'].toString()),
+                            isSelected: selectedFees1.contains(fees[index]['installment_id'].toString()),
                             onSelect: (bool selected) {
                               _toggleSelection(
                                   fees[index]['installment_id'],

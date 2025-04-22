@@ -68,10 +68,10 @@ class _HomeScreenState extends State<HomeScreen> {
       'name': 'Gallery',
       'image': 'assets/gallery.png',
     },
-    {
-      'name': 'Report Card',
-      'image': 'assets/report.png',
-    },
+    // {
+    //   'name': 'Report Card',
+    //   'image': 'assets/report.png',
+    // },
   ];
 
   @override

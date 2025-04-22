@@ -71,7 +71,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           Uri.parse(apiUrl),
           // Uri.parse('http://192.168.1.2/cjm_shimla/api/forgot-password'),
           body: {
-            'email': emailController.text,
+            'contact_no': emailController.text,
           },
         );
         setState(() {
@@ -80,12 +80,67 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         });
         if (response.statusCode == 200) {
           final Map<String, dynamic> responseData = json.decode(response.body);
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => OtpVerifyPage(email: emailController.text, otp: responseData['otp'].toString(),),
+
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              title: Row(
+                children: [
+                  Icon(Icons.check_circle, color: Colors.green, size: 28),
+                  SizedBox(width: 8),
+                  Text(
+                    'OTP Sent',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+              content: Text(
+                'OTP has been sent successfully to your mobile number.',
+                style: TextStyle(fontSize: 16),
+              ),
+              actions: [
+                Center(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OtpVerifyPage(
+                            email: emailController.text,
+                            otp: responseData['otp'].toString(),
+                          ),
+                        ),
+                      );
+                      emailController.clear();
+                    },
+                    child: Text(
+                      'Verify OTP',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  ),
+                ),
+              ],
             ),
           );
+
+
+
+
+
           // Fluttertoast.showToast(
           //   msg: "${'Otp :- '}${responseData['otp']}",
           //   toastLength: Toast.LENGTH_LONG,
@@ -297,7 +352,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Email Id",
+                            "Admission Number",
                             style: GoogleFonts.poppins(
                               textStyle: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.normal, color: Colors.black),
                             ),
@@ -372,12 +427,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                       padding: EdgeInsets.symmetric(horizontal: 8.0),
                                       child: TextField(
                                         controller: emailController ,
-                                        keyboardType: TextInputType.emailAddress,
+                                        keyboardType: TextInputType.text,
                                         style: GoogleFonts.poppins(
                                           textStyle: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.normal, color: Colors.black),
                                         ),
                                         decoration: InputDecoration(
-                                          hintText: 'Enter your email',
+                                          hintText: 'Enter your Admission Number',
                                           border: InputBorder.none,
                                           prefixIcon: Icon(Icons.email, color: Colors.black),
                                         ),

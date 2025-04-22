@@ -98,19 +98,18 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
     final response = await http.get(
       // Uri.parse(ApiRoutes.getlibrary),
-      Uri.parse(
-          '${ApiRoutes
-              .getlibrary}?type=$type&publisher=$publishers&supplier=$supplier&title=${textController
-              .text}'),
-
+      Uri.parse('${ApiRoutes.getlibrary}?type=$type&publisher=$publishers&supplier=$supplier&title=${textController.text}'),
       headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
+
       setState(() {
         books = jsonResponse['data'];
         filteredBooks = books;
+        print('Books: $books');
+        print('FilteredBooks: $filteredBooks');
 
         isLoading = false; // Stop progress bar
 // Update state with fetched data

@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import '../../constants.dart';
 
 class ApplyLeaves extends StatefulWidget {
@@ -15,12 +18,13 @@ class _LeaveRequestScreenState extends State<ApplyLeaves> {
   DateTime? fromDate;
   DateTime? toDate;
   TextEditingController reasonController = TextEditingController();
+  bool isLoading = false;
 
   Future<void> _selectDate(BuildContext context, bool isFromDate) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
+      firstDate: DateTime.now(), // Restrict to current date or later
       lastDate: DateTime(2101),
     );
 
@@ -35,6 +39,49 @@ class _LeaveRequestScreenState extends State<ApplyLeaves> {
     }
   }
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
+
+
+
+  Future<void> applyLeave() async {
+    setState(() {
+      isLoading = true;  // Show loader
+    });
+
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    print("Token: $token");
+
+    print(fromDate);
+
+    final response = await http.post(
+      Uri.parse(ApiRoutes.applyleave),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'selected_date': DateFormat('dd-MMM-yyyy').format(fromDate!),
+        'reason': reasonController.text,
+      }),
+    );
+
+    setState(() {
+      isLoading = false; // Hide loader after response
+    });
+
+    if (response.statusCode == 201) {
+      final data = json.decode(response.body);
+      showLeaveSuccessDialog(context);
+    } else {
+      print("Leave application failed: ${response.body}");
+      // Optionally show error dialog/snackbar here
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,19 +151,42 @@ class _LeaveRequestScreenState extends State<ApplyLeaves> {
                           ),
                         ),
                         SizedBox(height: 30.sp),
+
                         ElevatedButton(
-                          onPressed: () {},
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.secondary,
                             padding: EdgeInsets.symmetric(
                                 horizontal: 50, vertical: 15),
                           ),
-                          child: Text(
-                            "Submit",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 16.sp),
-                          ),
+                          onPressed: isLoading ? null : applyLeave,
+                          child: isLoading
+                              ? SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                              : Text('Submit',style:
+                              TextStyle(color: Colors.white, fontSize: 16.sp),),
                         ),
+
+                        // ElevatedButton(
+                        //   onPressed: () {
+                        //     applyLeave();
+                        //   },
+                        //   style: ElevatedButton.styleFrom(
+                        //     backgroundColor: AppColors.secondary,
+                        //     padding: EdgeInsets.symmetric(
+                        //         horizontal: 50, vertical: 15),
+                        //   ),
+                        //   child: Text(
+                        //     "Submit",
+                        //     style:
+                        //         TextStyle(color: Colors.white, fontSize: 16.sp),
+                        //   ),
+                        // ),
                         SizedBox(height: 10.sp),
                       ],
                     ),
@@ -199,4 +269,56 @@ class _LeaveRequestScreenState extends State<ApplyLeaves> {
       ),
     );
   }
+
+  void showLeaveSuccessDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.check_circle, color: Colors.green, size: 60),
+                const SizedBox(height: 16),
+                Text(
+                  "Leave Applied Successfully!",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  "Your leave request has been submitted.",
+                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  onPressed: () {
+                    reasonController.clear();
+                    setState(() {
+                      fromDate = null;
+                    });
+
+
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("OK",style: TextStyle(color: Colors.white),),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 }

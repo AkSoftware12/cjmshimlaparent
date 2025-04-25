@@ -78,14 +78,14 @@ class _LeavesTabScreenState extends State<LeavesTabScreen>
                 tabs: [
                   Tab(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.h),
-                      child: Text("Apply Leave"),
+                      padding: EdgeInsets.symmetric(horizontal: 10.h),
+                      child: Text("Apply Leave".toUpperCase(),style: TextStyle(fontSize: 12.sp),),
                     ),
                   ),
                   Tab(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.h),
-                      child: Text("Approve Leave"),
+                      padding: EdgeInsets.symmetric(horizontal: 10.h),
+                      child: Text("Applied Leaves".toUpperCase(),style: TextStyle(fontSize: 12.sp),),
                     ),
                   ),
                 ],

@@ -30,20 +30,16 @@ class ApiRoutes {
 // Gallery App url
   static const String baseUrl2 = "https://webcjm.cjmshimla.in/api";
 
-  // Main App Url
-  // static const String baseUrl = "https://apicjm.cjmshimla.in/api";
-
-
   // static const String baseUrl = "https://testapi.cjmshimla.in/api";
-  static const String baseUrl = "https://softcjm.cjmshimla.in/api";
+  // static const String baseUrl = "https://softcjm.cjmshimla.in/api";
   // static const String downloadUrl = "https://testapi.cjmshimla.in/student/fee-receipt/";
-  static const String downloadUrl = "https://softcjm.cjmshimla.in/student/fee-receipt/";
+  // static const String downloadUrl = "https://softcjm.cjmshimla.in/student/fee-receipt/";
 
 
   // Local App url
 
-  // static const String baseUrl = "http://192.168.1.6/cjm_shimla/api";
-  // static const String downloadUrl = "http://192.168.1.6/cjm_shimla/student/fee-receipt/";
+  static const String baseUrl = "http://192.168.1.2/cjm_shimla/api";
+  static const String downloadUrl = "http://192.168.1.2/cjm_shimla/student/fee-receipt/";
 
 
   static const String login = "$baseUrl/login";
@@ -74,4 +70,5 @@ class ApiRoutes {
   static const String updateApk= "$baseUrl/update-apk";
   static const String forgotPassword= "$baseUrl/forgot-password";
   static const String verifyOtp= "$baseUrl/verifyOtp";
+  static const String applyleave= "$baseUrl/applyleave";
 }

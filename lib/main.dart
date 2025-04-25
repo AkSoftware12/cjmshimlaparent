@@ -329,7 +329,7 @@ class UpdateChecker {
           content: Padding(
             padding: EdgeInsets.only(bottom: 18.sp),
             child: Text(
-              "First, click the 'Update Now' button to download the new APK. After that, uninstall the old version of the app and install the newly downloaded APK.",
+              "First, click the 'Update Now' button to download the latest version from the Play Store. Once the update is complete, open the app to start using the new version.",
               style: GoogleFonts.poppins(
                 textStyle: TextStyle(
                     color: Colors.black,

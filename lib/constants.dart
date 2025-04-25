@@ -34,8 +34,8 @@ class ApiRoutes {
   // static const String baseUrl = "https://apicjm.cjmshimla.in/api";
 
 
-  // static const String baseUrl = "https://testapi.cjmshimla.in/api";
-  static const String baseUrl = "https://softcjm.cjmshimla.in/api";
+  static const String baseUrl = "https://testapi.cjmshimla.in/api";
+  // static const String baseUrl = "https://softcjm.cjmshimla.in/api";
   // static const String downloadUrl = "https://testapi.cjmshimla.in/student/fee-receipt/";
   static const String downloadUrl = "https://softcjm.cjmshimla.in/student/fee-receipt/";
 

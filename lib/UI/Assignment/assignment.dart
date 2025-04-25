@@ -231,10 +231,10 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
                             ),
                             child: GestureDetector(
                               onTap: (){
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(builder: (context) =>  AssignmentDetalis(title: '${assignment['title'].toString()}', descripation: '${assignment['description'].toString()}',)),
-                                // );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) =>  AssignmentDetalis(title: '${assignment['title'].toString()}', descripation: '${assignment['description'].toString()}', date: '${assignment['created_at'].toString()}',)),
+                                );
                               },
                               child: Padding(
                                 padding: EdgeInsets.all(10.sp),

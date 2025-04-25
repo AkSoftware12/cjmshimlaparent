@@ -19,6 +19,7 @@ import '../Assignment/assignment.dart';
 import '../Auth/login_screen.dart';
 import '../Gallery/gallery_tab.dart';
 import '../HomeWork/home_work.dart';
+import '../Leaves/leaves_tab.dart';
 import '../Notice/notice.dart';
 import '../Report/report_card.dart';
 import '../Subject/subject.dart';
@@ -52,6 +53,12 @@ class _HomeScreenState extends State<HomeScreen> {
       'name': 'Time Table',
       'image': 'assets/watch.png',
     },
+
+    {
+      'name': 'Leaves',
+      'image': 'assets/deadline.png',
+    },
+
     // {
     //   'name': 'Home Work',
     //   'image': 'assets/home_work.png',
@@ -68,6 +75,8 @@ class _HomeScreenState extends State<HomeScreen> {
       'name': 'Gallery',
       'image': 'assets/gallery.png',
     },
+
+
     // {
     //   'name': 'Report Card',
     //   'image': 'assets/report.png',
@@ -331,6 +340,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   MaterialPageRoute(
                     builder: (context) {
                       return TimeTableScreen();
+                    },
+                  ),
+                );
+              }else if (items[index]['name'] == 'Leaves') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return LeavesTabScreen();
                     },
                   ),
                 );

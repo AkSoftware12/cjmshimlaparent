@@ -1,3 +1,4 @@
+import 'package:cjmshimlaparent/UI/Assignment/view_assignments.dart';
 import 'package:cjmshimlaparent/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,9 +11,10 @@ class AssignmentDetalis extends StatefulWidget {
   final String title;
   final String descripation;
   final String date;
+  final String attach;
 
   const AssignmentDetalis(
-      {super.key, required this.title, required this.descripation, required this.date});
+      {super.key, required this.title, required this.descripation, required this.date, required this.attach});
 
   @override
   State<AssignmentDetalis> createState() => _AssignmentDetalisState();
@@ -33,6 +35,7 @@ class _AssignmentDetalisState extends State<AssignmentDetalis> {
               fontSize: 15.sp,
               fontWeight: FontWeight.w600),
         ),
+
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -77,8 +80,30 @@ class _AssignmentDetalisState extends State<AssignmentDetalis> {
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w500),
                       ),
+
+
                       SizedBox(
-                        height: 50.sp,
+                        height: 20.sp,
+                      ),
+                      if (widget.attach.toString()!='null')
+
+
+                        Center(
+                          child: SizedBox(
+                            width: 150.sp,
+                            child: _buildButton(
+                              text: 'View',
+                              color: AppColors.secondary,
+                              onTap: () async {
+                                FileOpener.openFile(widget.attach.toString());
+                              },
+                            ),
+                          ),
+                        ),
+
+
+                      SizedBox(
+                        height: 20.sp,
                       ),
                     ],
                   ),
@@ -106,4 +131,40 @@ class _AssignmentDetalisState extends State<AssignmentDetalis> {
       ),
     );
   }
+
+
+  Widget _buildButton(
+      {required String text,
+        required Color color,
+        required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        // width: MediaQuery.of(context).size.width*0.85,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(5),
+        ),
+        padding: EdgeInsets.symmetric(vertical: 8.sp, horizontal: 8.sp),
+        child: Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.attachment,color: Colors.white,),
+                SizedBox(width: 10.sp,),
+                Text(
+                  text.toUpperCase(),
+                  style: GoogleFonts.montserrat(
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            )
+        ),
+      ),
+    );
+  }
+
 }

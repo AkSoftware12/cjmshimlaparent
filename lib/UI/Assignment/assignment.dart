@@ -217,7 +217,7 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
                           onTap: (){
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) =>  AssignmentDetalis(title: '${assignment['title'].toString()}', descripation: '${assignment['description'].toString()}', date: '${assignment['created_at'].toString()}',)),
+                              MaterialPageRoute(builder: (context) =>  AssignmentDetalis(title: '${assignment['title'].toString()}', descripation: '${assignment['description'].toString()}', date: '${assignment['created_at'].toString()}', attach: assignment['attach'].toString())),
                             );
                           },
                           child: Card(
@@ -233,7 +233,7 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
                               onTap: (){
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) =>  AssignmentDetalis(title: '${assignment['title'].toString()}', descripation: '${assignment['description'].toString()}', date: '${assignment['created_at'].toString()}',)),
+                                  MaterialPageRoute(builder: (context) =>  AssignmentDetalis(title: '${assignment['title'].toString()}', descripation: '${assignment['description'].toString()}', date: '${assignment['created_at'].toString()}', attach: assignment['attach'].toString(),)),
                                 );
                               },
                               child: Padding(
@@ -302,7 +302,7 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
                                             ],
                                           ),
                                         ),
-                                        if(assignment['attach']=='null' && assignment['attach']=='')
+                                        if(assignment['attach']!=null)
                                         _buildButton(
                                           text: 'View',
                                           color: AppColors.secondary,
